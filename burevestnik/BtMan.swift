@@ -31,6 +31,7 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
 
   func sendMessage(_ text: String) {
     allDiscovered.append(BroadMessage(text))
+    triggerAdvertiseBroadcasting()
   }
 
   var broadcastBack: [String: String] {
@@ -71,7 +72,7 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
     session.delegate = self
 
 
-    timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(startStopBrowseAdvertise), userInfo: nil, repeats: true)
+    timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(triggerDiscoveryBrowsing), userInfo: nil, repeats: true)
     timer?.tolerance = 5 * 0.1
 
     defer {
@@ -81,23 +82,31 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
 
   var timer: Timer?
 
-  @objc func startStopBrowseAdvertise() {
-    if browser != nil {
-      browser.stopBrowsingForPeers()
-    }
+  func startStopBrowseAdvertise() {
+    triggerAdvertiseBroadcasting()
+    triggerDiscoveryBrowsing()
+  }
 
+  func triggerAdvertiseBroadcasting() {
     if advertiser != nil {
       advertiser.stopAdvertisingPeer()
+    }
+
+    advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: broadcastBack, serviceType: kMCSessionServiceType)
+    advertiser.delegate = self
+
+    advertiser.startAdvertisingPeer()
+  }
+
+  @objc func triggerDiscoveryBrowsing() {
+    if browser != nil {
+      browser.stopBrowsingForPeers()
     }
 
     browser = MCNearbyServiceBrowser(peer: peer, serviceType: kMCSessionServiceType)
     browser.delegate = self
 
-    advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: broadcastBack, serviceType: kMCSessionServiceType)
-    advertiser.delegate = self
-
     browser.startBrowsingForPeers()
-    advertiser.startAdvertisingPeer()
   }
 
   func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
