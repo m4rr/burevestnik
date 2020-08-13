@@ -18,6 +18,8 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
   var advertiser: MCNearbyServiceAdvertiser!
   var session: MCSession!
 
+  let pollTiming = TimeInterval(3)
+
   private var allDiscovered: [BroadMessage] = [] {
     didSet {
       reloadHandler()
@@ -72,15 +74,19 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
     session.delegate = self
 
 
-    timer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(triggerDiscoveryBrowsing), userInfo: nil, repeats: true)
-    timer?.tolerance = 5 * 0.1
+    pollTimer = Timer.scheduledTimer(timeInterval: pollTiming,
+                                 target: self,
+                                 selector: #selector(triggerDiscoveryBrowsing),
+                                 userInfo: nil,
+                                 repeats: true)
+    pollTimer?.tolerance = pollTiming * 0.1
 
     defer {
       startStopBrowseAdvertise()
     }
   }
 
-  var timer: Timer?
+  var pollTimer: Timer?
 
   func startStopBrowseAdvertise() {
     triggerAdvertiseBroadcasting()
@@ -139,10 +145,17 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
     if let info = info {
       let receivedMessages = BroadMessage.from(dic: info)
 
+      var hasAppend = false
+
       receivedMessages.forEach { (newMessage) in
         if !allDiscovered.contains(where: { $0.msg == newMessage.msg }) {
           allDiscovered.append(newMessage)
+          hasAppend = true
         }
+      }
+
+      if hasAppend {
+        triggerAdvertiseBroadcasting()
       }
     }
   }
