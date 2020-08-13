@@ -283,6 +283,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = burevestnik/burevestnik.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = Y5P7AX9UM2;
 				INFOPLIST_FILE = burevestnik/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -302,6 +303,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = burevestnik/burevestnik.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = Y5P7AX9UM2;
 				INFOPLIST_FILE = burevestnik/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
