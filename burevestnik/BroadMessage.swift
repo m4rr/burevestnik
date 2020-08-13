@@ -34,12 +34,4 @@ struct BroadMessage: Equatable {
     }
   }
 
-//  static func == (lhs: Self, rhs: Self) -> Bool {
-//    lhs.msg == rhs.msg
-//  }
-
-  
-
-
-
 }

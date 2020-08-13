@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol API {
+protocol API: class {
 
   func getTime() -> TimeInterval
 
@@ -17,5 +17,29 @@ protocol API {
 
   func sendToPeer(peerID: String, data: String)
   func didReceiveFromPeer(peerID: String, data: String)
+
+}
+
+extension BtMan: API {
+
+  func getTime() -> TimeInterval {
+    return Date().timeIntervalSince1970
+  }
+
+  func foundPeer(peerID: String, time: TimeInterval) {
+    
+  }
+
+  func lostPeer(peerID: String, time: TimeInterval) {
+
+  }
+
+  func sendToPeer(peerID: String, data: String) {
+    sessionSend(to: peerID, data: data)
+  }
+
+  func didReceiveFromPeer(peerID: String, data: String) {
+
+  }
 
 }

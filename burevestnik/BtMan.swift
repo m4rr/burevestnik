@@ -137,6 +137,8 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
   func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
     debugPrint(#function, peerID, info)
 
+    
+
     if peerID.displayName == self.peer.displayName {
       return
     }
@@ -165,6 +167,17 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
 
   func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
     debugPrint(#function, peerID)
+  }
+}
+
+extension BtMan {
+
+  func sessionSend(to peerID: String, data str: String) {
+    if let data = str.data(using: .utf8) {
+      try? session.send(data,
+                        toPeers: [MCPeerID(displayName: peerID)],
+                        with: .reliable)
+    }
   }
 
 }
