@@ -12,6 +12,7 @@
 		036E936824E3E00D001DA125 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036E936724E3E00D001DA125 /* ViewController.swift */; };
 		036E936D24E3E013001DA125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 036E936C24E3E013001DA125 /* Assets.xcassets */; };
 		036E937824E3EA9C001DA125 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 036E937724E3EA9C001DA125 /* Main.storyboard */; };
+		03A5EEAB24E5E29700D523F0 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A5EEAA24E5E29700D523F0 /* API.swift */; };
 		03AE438024E44127000D82B7 /* BtMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BtMan.swift */; };
 		03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE438124E44158000D82B7 /* BroadMessage.swift */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,7 @@
 		036E936C24E3E013001DA125 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		036E937124E3E013001DA125 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		036E937724E3EA9C001DA125 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		03A5EEAA24E5E29700D523F0 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		03AE437F24E44127000D82B7 /* BtMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtMan.swift; sourceTree = "<group>"; };
 		03AE438124E44158000D82B7 /* BroadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadMessage.swift; sourceTree = "<group>"; };
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				036E936324E3E00D001DA125 /* AppDelegate.swift */,
 				036E936724E3E00D001DA125 /* ViewController.swift */,
 				03AE438124E44158000D82B7 /* BroadMessage.swift */,
+				03A5EEAA24E5E29700D523F0 /* API.swift */,
 				03AE437F24E44127000D82B7 /* BtMan.swift */,
 				036E936C24E3E013001DA125 /* Assets.xcassets */,
 				036E937724E3EA9C001DA125 /* Main.storyboard */,
@@ -157,6 +160,7 @@
 				036E936824E3E00D001DA125 /* ViewController.swift in Sources */,
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
 				03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */,
+				03A5EEAB24E5E29700D523F0 /* API.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
