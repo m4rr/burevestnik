@@ -52,19 +52,18 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
   init(reloadHandler: @escaping () -> Void) {
     self.reloadHandler = reloadHandler
 
-    #if targetEnvironment(simulator)
-    allDiscovered = [BroadMessage("Если кто-то снимает происходящее в Серебрянке - пришлите нам в @BGMnews_bot")]
-    #else
-    allDiscovered = [
-      BroadMessage("Самым безопасным методом борьбы с усатым диктатором будет забастовка. Поэтому общайтесь.",
-                   Date(timeIntervalSinceNow: 1)),
-      BroadMessage("Лукашенко собрал совещание. Понятно из ситуации, что найважнейшими задачами, которые сейчас стоят перед органами власти",
-                   Date(timeIntervalSinceNow: 2)),
-      BroadMessage("Госмедиа заявляют, что Лукашенко начал совещание, где поднял тему сохранения порядка на улицах.",
-                   Date(timeIntervalSinceNow: 3)),
-    ]
-    #endif
-
+//    #if targetEnvironment(simulator)
+//    allDiscovered = [BroadMessage("Если кто-то снимает происходящее в Серебрянке - пришлите нам в @BGMnews_bot")]
+//    #else
+//    allDiscovered = [
+//      BroadMessage("Самым безопасным методом борьбы с усатым диктатором будет забастовка. Поэтому общайтесь.",
+//                   Date(timeIntervalSinceNow: 1)),
+//      BroadMessage("Лукашенко собрал совещание. Понятно из ситуации, что найважнейшими задачами, которые сейчас стоят перед органами власти",
+//                   Date(timeIntervalSinceNow: 2)),
+//      BroadMessage("Госмедиа заявляют, что Лукашенко начал совещание, где поднял тему сохранения порядка на улицах.",
+//                   Date(timeIntervalSinceNow: 3)),
+//    ]
+//    #endif
 
     super.init()
 
