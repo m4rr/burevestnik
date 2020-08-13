@@ -113,7 +113,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1160;
 				LastUpgradeCheck = 1160;
-				ORGANIZATIONNAME = Marat;
+				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					036E935F24E3E00D001DA125 = {
 						CreatedOnToolsVersion = 11.6;

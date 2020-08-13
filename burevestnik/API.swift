@@ -2,8 +2,7 @@
 //  API.swift
 //  burevestnik
 //
-//  Created by Marat on 14.08.2020.
-//  Copyright © 2020 Marat. All rights reserved.
+//  Created by Marat Saytakov on 14.08.2020.
 //
 
 import Foundation
