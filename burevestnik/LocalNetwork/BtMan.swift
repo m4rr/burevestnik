@@ -12,15 +12,15 @@ private let kMCSessionServiceType = "burevestnik"
 
 class BtMan: NSObject, APIFuncs {
 
-  func getTime() {
-    
+  func getTime() -> Date {
+    return api.getTime()
   }
 
-  func sendToPeer() {
+  func sendToPeer(peerID: String, data: Data) {
     #warning("stub")
   }
   
-  var api: API
+  var api: API!
 
   private var localPeerID: MCPeerID!
   private var browser: MCNearbyServiceBrowser!
@@ -139,11 +139,11 @@ extension BtMan: MCSessionDelegate {
 
     switch state {
     case .connected:
-      api.foundPeer()
+      api.foundPeer(peerID: peerID.displayName, date: Date())
 //      invoke(cmd: .foundPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     case .notConnected:
-      api.lostPeer()
+      api.lostPeer(peerID: peerID.displayName, date: Date())
 //      invoke(cmd: .lostPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     default:
@@ -154,7 +154,7 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
     debugPrint(#function, data, peerID)
 
-    api.didReceiveFromPeer()
+    api.didReceiveFromPeer(peerID: peerID.displayName, data: data)
 //    invoke(cmd: .didReceiveFromPeer, args: .init(peerID: peerID.description, data: String(data: data, encoding: .utf8), time: nil))
   }
 

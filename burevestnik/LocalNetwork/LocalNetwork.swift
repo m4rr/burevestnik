@@ -9,11 +9,15 @@ import Foundation
 
 class WebSocketConn: APIFuncs {
 
-  func getTime() {
-    
+  func getTime() -> Date {
+    return api.getTime()
   }
 
-  var meshController: APICallbacks?
+  func sendToPeer(peerID: String, data: Data) {
+
+  }
+
+  var api: API!
 
 
   func sendToPeer() {

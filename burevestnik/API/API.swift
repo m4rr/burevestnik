@@ -12,22 +12,22 @@ import Foundation
 protocol APIFuncs: class {
 
   /// 1
-  func getTime()
+  func getTime() -> Date
 
   /// 4
-  func sendToPeer()
+  func sendToPeer(peerID: String, data: Data)
 
 }
 
 protocol APICallbacks: class {
 
   /// 2
-  func foundPeer()
+  func foundPeer(peerID: String, date: Date)
   /// 3
-  func lostPeer()
+  func lostPeer(peerID: String, date: Date)
 
   /// 5
-  func didReceiveFromPeer()
+  func didReceiveFromPeer(peerID: String, data: Data)
 
 }
 
@@ -35,7 +35,7 @@ protocol API: APIFuncs & APICallbacks {
 
   var meshController: APICallbacks? { get set }
   var localNetwork: APIFuncs? { get set }
-  
+
 }
 
 class APIMan: API {
@@ -50,26 +50,26 @@ class APIMan: API {
 
   // funcs
 
-  func getTime() {
-    localNetwork?.getTime()
+  func getTime() -> Date {
+    return localNetwork!.getTime()
   }
 
-  func sendToPeer() {
-    localNetwork?.sendToPeer()
+  func sendToPeer(peerID: String, data: Data) {
+    localNetwork?.sendToPeer(peerID: peerID, data: data)
   }
 
   // callbacks
 
-  func foundPeer() {
-    meshController?.foundPeer()
+  func foundPeer(peerID: String, date: Date) {
+    meshController?.foundPeer(peerID: peerID, date: date)
   }
 
-  func lostPeer() {
-    meshController?.lostPeer()
+  func lostPeer(peerID: String, date: Date) {
+    meshController?.lostPeer(peerID: peerID, date: date)
   }
 
-  func didReceiveFromPeer() {
-    meshController?.didReceiveFromPeer()
+  func didReceiveFromPeer(peerID: String, data: Data) {
+    meshController?.didReceiveFromPeer(peerID: peerID, data: data)
   }
 
 }

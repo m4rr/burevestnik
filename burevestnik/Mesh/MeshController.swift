@@ -9,6 +9,18 @@ import Foundation
 
 class MeshController: APICallbacks {
 
+  func foundPeer(peerID: String, date: Date) {
+
+  }
+
+  func lostPeer(peerID: String, date: Date) {
+
+  }
+
+  func didReceiveFromPeer(peerID: String, data: Data) {
+
+  }
+
   var reloadHandler: () -> Void
 
   var storage = [BroadMessage]()
@@ -18,18 +30,6 @@ class MeshController: APICallbacks {
   init(reloadHandler: @escaping () -> Void) {
 
     self.reloadHandler = reloadHandler
-
-  }
-
-  func foundPeer() {
-
-  }
-
-  func lostPeer() {
-
-  }
-
-  func didReceiveFromPeer() {
 
   }
 
