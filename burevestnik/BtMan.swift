@@ -10,9 +10,9 @@ import MultipeerConnectivity
 
 private let kMCSessionServiceType = "burevestnik"
 
-class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
+class BtMan: NSObject { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
 
-  var peer: MCPeerID!
+  var localPeerID: MCPeerID!
   var browser: MCNearbyServiceBrowser!
   var advertiser: MCNearbyServiceAdvertiser!
   var session: MCSession!
@@ -48,6 +48,8 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
 
   var reloadHandler: () -> Void
 
+
+
   init(reloadHandler: @escaping () -> Void) {
     self.reloadHandler = reloadHandler
 
@@ -66,9 +68,11 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
 
     super.init()
 
-    peer = MCPeerID(displayName: UIDevice.current.name)
+    localPeerID = MCPeerID(displayName: UIDevice.current.name)
 
-    session = MCSession(peer: peer)
+    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
+
+    session = MCSession(peer: localPeerID)
     session.delegate = self
 
 
@@ -96,7 +100,7 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
       advertiser.stopAdvertisingPeer()
     }
 
-    advertiser = MCNearbyServiceAdvertiser(peer: peer, discoveryInfo: broadcastBack, serviceType: kMCSessionServiceType)
+    advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: broadcastBack, serviceType: kMCSessionServiceType)
     advertiser.delegate = self
 
     advertiser.startAdvertisingPeer()
@@ -107,18 +111,35 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
       browser.stopBrowsingForPeers()
     }
 
-    browser = MCNearbyServiceBrowser(peer: peer, serviceType: kMCSessionServiceType)
+    browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: kMCSessionServiceType)
     browser.delegate = self
 
     browser.startBrowsingForPeers()
   }
 
+}
+
+extension BtMan: MCSessionDelegate {
+
   func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
     debugPrint(#function, state)
+
+    switch state {
+    case .connected:
+      invoke(cmd: .foundPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
+
+    case .notConnected:
+      invoke(cmd: .lostPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
+
+    default:
+      ()
+    }
   }
 
   func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
     debugPrint(#function, data, peerID)
+
+    invoke(cmd: .didReceiveFromPeer, args: .init(peerID: peerID.description, data: String(data: data, encoding: .utf8), time: nil))
   }
 
   func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -133,14 +154,26 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
     debugPrint(#function, resourceName, peerID, localURL)
   }
 
+}
+
+extension BtMan: MCNearbyServiceBrowserDelegate {
+
   func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
     debugPrint(#function, peerID, info)
 
-    
 
-    if peerID.displayName == self.peer.displayName {
+    if peerID.displayName == self.localPeerID.displayName {
       return
     }
+
+    session.nearbyConnectionData(forPeer: peerID) { (data, error) in
+      if let data = data {
+        self.session.connectPeer(peerID, withNearbyConnectionData: data)
+      }
+    }
+
+
+
 
     if let info = info {
       let receivedMessages = BroadMessage.from(dic: info)
@@ -163,6 +196,10 @@ class BtMan: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNear
   func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
     debugPrint(#function, peerID)
   }
+
+}
+
+extension BtMan: MCNearbyServiceAdvertiserDelegate {
 
   func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
     debugPrint(#function, peerID)
