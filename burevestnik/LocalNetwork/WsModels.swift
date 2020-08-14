@@ -7,6 +7,10 @@
 
 import Foundation
 
+protocol NetInvoker {
+  func invoke(cmd: Command, args: Arguments)
+}
+
 enum Command: String, Codable {
   case
     getTime,

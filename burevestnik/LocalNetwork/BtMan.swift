@@ -10,8 +10,16 @@ import MultipeerConnectivity
 
 private let kMCSessionServiceType = "burevestnik"
 
-class BtMan: NSObject, APIDelegate { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
+class BtMan: NSObject, APIFuncs {
 
+  func getTime() {
+
+  }
+
+  func sendToPeer() {
+    #warning("stub")
+  }
+  
   var api: API
 
   var localPeerID: MCPeerID!
@@ -49,9 +57,6 @@ class BtMan: NSObject, APIDelegate { //, MCSessionDelegate, MCNearbyServiceBrows
   }
 
 
-  func sendToPeer() {
-    #warning("stub")
-  }
 
   init(api: API) {
 
@@ -74,7 +79,8 @@ class BtMan: NSObject, APIDelegate { //, MCSessionDelegate, MCNearbyServiceBrows
 
     super.init()
 
-    self.api.delegate = self
+    #warning("declare api funcs")
+//    self.api.delegate = self
 
     localPeerID = MCPeerID(displayName: UIDevice.current.name)
 

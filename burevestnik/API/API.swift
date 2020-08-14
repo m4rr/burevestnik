@@ -7,82 +7,69 @@
 
 import Foundation
 
-protocol API {
+//github.com/m4rr/burevestnik/blob/master/jsonrpc.md
 
+protocol APIFuncs: class {
+
+  /// 1
   func getTime()
 
+  /// 4
+  func sendToPeer()
+
+}
+
+protocol APICallbacks: class {
+
+  /// 2
   func foundPeer()
+  /// 3
   func lostPeer()
 
-  func sendToPeer()
+  /// 5
   func didReceiveFromPeer()
 
-  var delegate: APIDelegate? { get set }
+}
+
+protocol API: APIFuncs & APICallbacks {
+
+  var meshController: APICallbacks? { get set }
+  var localNetwork: APIFuncs? { get set }
 
 }
 
-protocol APIDelegate: class {
+class APIMan: API {
 
-  func sendToPeer()
+  weak var meshController: APICallbacks?
+  weak var localNetwork: APIFuncs?
 
-}
+  init(meshController: APICallbacks, localNetwork: APIFuncs) {
+    self.meshController = meshController
+    self.localNetwork = localNetwork
+  }
 
-protocol NetInvoker {
-  func invoke(cmd: Command, args: Arguments)
-}
-
-class RealAPI: API {
-
-  var btMan: BtMan!
-
-  weak var delegate: APIDelegate?
+  // funcs
 
   func getTime() {
-    //
-  }
-
-  func foundPeer() {
-    // meshCon.foundPeer
-  }
-
-  func lostPeer() {
-    // meshCon.lostPeer
+    localNetwork?.getTime()
   }
 
   func sendToPeer() {
-    btMan.sendToPeer()
+    localNetwork?.sendToPeer()
   }
 
-  func didReceiveFromPeer() {
-    // meshCon.didReceiveFromPeer
-  }
-
-}
-
-class SimulationAPI: API {
-
-  weak var delegate: APIDelegate?
-
-  func getTime() {
-    //
-  }
+  // callbacks
 
   func foundPeer() {
-    // meshCon.foundPeer
+    meshController?.foundPeer()
   }
 
   func lostPeer() {
-    // meshCon.lostPeer
-  }
-
-  func sendToPeer() {
-    //    BtMan().send
+    meshController?.lostPeer()
   }
 
   func didReceiveFromPeer() {
-    // meshCon.didReceiveFromPeer
+    meshController?.didReceiveFromPeer()
   }
-
-
 
 }

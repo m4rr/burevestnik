@@ -7,19 +7,30 @@
 
 import Foundation
 
-class MeshController {
+class MeshController: APICallbacks {
 
   var reloadHandler: () -> Void
 
   var storage = [BroadMessage]()
 
-  var api: API 
+//  weak var api: APIFuncs?
 
   init(reloadHandler: @escaping () -> Void) {
 
     self.reloadHandler = reloadHandler
 
-    api = SimulationAPI()
+  }
+
+  func foundPeer() {
+
+  }
+
+  func lostPeer() {
+
+  }
+
+  func didReceiveFromPeer() {
+
   }
 
 }
