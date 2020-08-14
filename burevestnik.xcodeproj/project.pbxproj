@@ -71,19 +71,17 @@
 		036E936224E3E00D001DA125 /* burevestnik */ = {
 			isa = PBXGroup;
 			children = (
-				03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */,
 				036E936324E3E00D001DA125 /* AppDelegate.swift */,
-				036E936724E3E00D001DA125 /* ViewController.swift */,
 				03AE438124E44158000D82B7 /* BroadMessage.swift */,
-				03D7236824E6D05F003B3211 /* MeshController.swift */,
-				03527B2124E6B05B00E9C6DB /* API.swift */,
-				03527B2324E6B06900E9C6DB /* LocalNetwork.swift */,
-				03A5EEAA24E5E29700D523F0 /* WsModels.swift */,
-				03AE437F24E44127000D82B7 /* BtMan.swift */,
+				03D4D77F24E6F56D0083432E /* UI */,
+				03D4D77E24E6F55D0083432E /* Mesh */,
+				03D4D77D24E6F5530083432E /* API */,
+				03D4D77C24E6F54A0083432E /* LocalNetwork */,
 				036E936C24E3E013001DA125 /* Assets.xcassets */,
 				036E937724E3EA9C001DA125 /* Main.storyboard */,
 				036E937124E3E013001DA125 /* Info.plist */,
 				0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */,
+				03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */,
 				03527B2024E6AE5A00E9C6DB /* jsonrpc.md */,
 				03527B1F24E6AE5A00E9C6DB /* README.md */,
 			);
@@ -96,6 +94,40 @@
 				03C8656C24E44D4000FAC1B5 /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03D4D77C24E6F54A0083432E /* LocalNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				03527B2324E6B06900E9C6DB /* LocalNetwork.swift */,
+				03A5EEAA24E5E29700D523F0 /* WsModels.swift */,
+				03AE437F24E44127000D82B7 /* BtMan.swift */,
+			);
+			path = LocalNetwork;
+			sourceTree = "<group>";
+		};
+		03D4D77D24E6F5530083432E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				03527B2124E6B05B00E9C6DB /* API.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		03D4D77E24E6F55D0083432E /* Mesh */ = {
+			isa = PBXGroup;
+			children = (
+				03D7236824E6D05F003B3211 /* MeshController.swift */,
+			);
+			path = Mesh;
+			sourceTree = "<group>";
+		};
+		03D4D77F24E6F56D0083432E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				036E936724E3E00D001DA125 /* ViewController.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

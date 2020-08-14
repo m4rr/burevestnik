@@ -83,7 +83,6 @@ class BtMan: NSObject, APIDelegate { //, MCSessionDelegate, MCNearbyServiceBrows
     session = MCSession(peer: localPeerID)
     session.delegate = self
 
-
     pollTimer = Timer.scheduledTimer(timeInterval: pollTiming,
                                  target: self,
                                  selector: #selector(triggerDiscoveryBrowsing),
