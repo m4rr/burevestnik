@@ -10,15 +10,7 @@ import MultipeerConnectivity
 
 private let kMCSessionServiceType = "burevestnik"
 
-class BtMan: NSObject, APIFuncs {
-
-  func getTime() -> Date {
-    return api.getTime()
-  }
-
-  func sendToPeer(peerID: String, data: Data) {
-    #warning("stub")
-  }
+class BtMan: NSObject {
   
   var api: API!
 
@@ -232,6 +224,19 @@ extension BtMan {
                         toPeers: [MCPeerID(displayName: peerID)],
                         with: .reliable)
     }
+  }
+
+}
+
+extension BtMan: APIFuncs {
+
+  func getTime() {
+    return api.getTime()
+  }
+
+  func sendToPeer(peerID: String, data: Data) {
+    guard let s = data.string else { return }
+    sessionSend(to: peerID, data: s)
   }
 
 }

@@ -12,7 +12,7 @@ import Foundation
 protocol APIFuncs: class {
 
   /// 1
-  func getTime() -> Date
+  func getTime()
 
   /// 4
   func sendToPeer(peerID: String, data: Data)
@@ -33,15 +33,15 @@ protocol APICallbacks: class {
 
 protocol API: APIFuncs & APICallbacks {
 
-  var meshController: APICallbacks? { get set }
-  var localNetwork: APIFuncs? { get set }
+//  var meshController: APICallbacks { get }
+//  var localNetwork: APIFuncs { get }
 
 }
 
 class APIMan: API {
 
-  weak var meshController: APICallbacks?
-  weak var localNetwork: APIFuncs?
+  weak var meshController: APICallbacks!
+  weak var localNetwork: APIFuncs!
 
   init(meshController: APICallbacks, localNetwork: APIFuncs) {
     self.meshController = meshController
@@ -50,8 +50,8 @@ class APIMan: API {
 
   // funcs
 
-  func getTime() -> Date {
-    return localNetwork!.getTime()
+  func getTime() {
+    localNetwork?.getTime()
   }
 
   func sendToPeer(peerID: String, data: Data) {
