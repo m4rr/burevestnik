@@ -92,7 +92,7 @@ extension BtMan: MCSessionDelegate {
   }
 
   func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
-    debugPrint(#function, resourceName, peerID, localURL)
+//    debugPrint(#function, resourceName, peerID, localURL)
   }
 
 }
@@ -101,7 +101,6 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
 
   func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
     debugPrint(#function, peerID, info)
-
 
     if peerID.displayName == self.localPeerID.displayName {
       return

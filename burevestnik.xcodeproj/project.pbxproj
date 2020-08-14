@@ -23,7 +23,6 @@
 /* Begin PBXFileReference section */
 		0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03527B1F24E6AE5A00E9C6DB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		03527B2024E6AE5A00E9C6DB /* jsonrpc.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = jsonrpc.md; sourceTree = SOURCE_ROOT; };
 		03527B2124E6B05B00E9C6DB /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		03527B2324E6B06900E9C6DB /* WsMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WsMan.swift; sourceTree = "<group>"; };
 		0367608824E719B900556EFA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -51,9 +50,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0367608A24E72B9F00556EFA /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				036E936324E3E00D001DA125 /* AppDelegate.swift */,
+				03AE438124E44158000D82B7 /* BroadMessage.swift */,
+				0367608824E719B900556EFA /* Extensions.swift */,
+				03D4D77F24E6F56D0083432E /* UI */,
+				03D4D77E24E6F55D0083432E /* Mesh */,
+				03D4D77D24E6F5530083432E /* API */,
+				03D4D77C24E6F54A0083432E /* LocalNetwork */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
 		036E935724E3E00D001DA125 = {
 			isa = PBXGroup;
 			children = (
+				03527B1F24E6AE5A00E9C6DB /* README.md */,
+				0367608A24E72B9F00556EFA /* Sources */,
 				036E936224E3E00D001DA125 /* burevestnik */,
 				036E936124E3E00D001DA125 /* Products */,
 				03C8656B24E44D4000FAC1B5 /* Frameworks */,
@@ -71,20 +86,11 @@
 		036E936224E3E00D001DA125 /* burevestnik */ = {
 			isa = PBXGroup;
 			children = (
-				036E936324E3E00D001DA125 /* AppDelegate.swift */,
-				03AE438124E44158000D82B7 /* BroadMessage.swift */,
-				0367608824E719B900556EFA /* Extensions.swift */,
-				03D4D77F24E6F56D0083432E /* UI */,
-				03D4D77E24E6F55D0083432E /* Mesh */,
-				03D4D77D24E6F5530083432E /* API */,
-				03D4D77C24E6F54A0083432E /* LocalNetwork */,
 				036E936C24E3E013001DA125 /* Assets.xcassets */,
-				036E937724E3EA9C001DA125 /* Main.storyboard */,
+				03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */,
 				036E937124E3E013001DA125 /* Info.plist */,
 				0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */,
-				03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */,
-				03527B2024E6AE5A00E9C6DB /* jsonrpc.md */,
-				03527B1F24E6AE5A00E9C6DB /* README.md */,
+				036E937724E3EA9C001DA125 /* Main.storyboard */,
 			);
 			path = burevestnik;
 			sourceTree = "<group>";
