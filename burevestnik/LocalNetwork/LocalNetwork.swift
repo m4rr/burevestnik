@@ -7,7 +7,14 @@
 
 import Foundation
 
-class WebSocketConn {
+class WebSocketConn: APIFuncs {
+
+  func getTime() {
+    
+  }
+
+  var meshController: APICallbacks?
+
 
   func sendToPeer() {
     #warning("stub")

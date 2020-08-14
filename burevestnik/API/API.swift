@@ -35,7 +35,7 @@ protocol API: APIFuncs & APICallbacks {
 
   var meshController: APICallbacks? { get set }
   var localNetwork: APIFuncs? { get set }
-
+  
 }
 
 class APIMan: API {

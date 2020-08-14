@@ -13,7 +13,7 @@ private let kMCSessionServiceType = "burevestnik"
 class BtMan: NSObject, APIFuncs {
 
   func getTime() {
-
+    
   }
 
   func sendToPeer() {
@@ -22,12 +22,12 @@ class BtMan: NSObject, APIFuncs {
   
   var api: API
 
-  var localPeerID: MCPeerID!
-  var browser: MCNearbyServiceBrowser!
-  var advertiser: MCNearbyServiceAdvertiser!
-  var session: MCSession!
+  private var localPeerID: MCPeerID!
+  private var browser: MCNearbyServiceBrowser!
+  private var advertiser: MCNearbyServiceAdvertiser!
+  private var session: MCSession!
 
-  let pollTiming = TimeInterval(3)
+  private let pollTiming = TimeInterval(3)
 
   private var allDiscovered: [BroadMessage] = [] {
     didSet {
