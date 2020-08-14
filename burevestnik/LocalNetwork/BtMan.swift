@@ -12,68 +12,22 @@ private let kMCSessionServiceType = "burevestnik"
 
 class BtMan: NSObject {
   
-  var api: API!
+  var api: API! {
+    didSet {
+      localPeerID = MCPeerID(displayName: UIDevice.current.name)
+      //    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
+
+      session = MCSession(peer: localPeerID)
+      session.delegate = self
+
+      startStopBrowseAdvertise()
+    }
+  }
 
   private var localPeerID: MCPeerID!
   private var browser: MCNearbyServiceBrowser!
   private var advertiser: MCNearbyServiceAdvertiser!
   private var session: MCSession!
-
-  private let pollTiming = TimeInterval(3)
-
-  private var allDiscovered: [BroadMessage] = [] {
-    didSet {
-//      reloadHandler()
-    }
-  }
-
-  var allSorted: [BroadMessage] {
-    allDiscovered
-      .sorted(by: { $0.ti < $1.ti })
-  }
-
-  func sendMessage(_ text: String) {
-    allDiscovered.append(BroadMessage(text))
-    triggerAdvertiseBroadcasting()
-  }
-
-  var broadcastBack: [String: String] {
-
-    var res: [String: String] = [:]
-
-    for bbc in allDiscovered {
-      res[bbc.ti.timeIntervalSinceReferenceDate.description] = bbc.msg
-    }
-
-    return res
-  }
-
-
-
-  init(api: API) {
-
-    self.api = api
-
-    super.init()
-
-    localPeerID = MCPeerID(displayName: UIDevice.current.name)
-
-//    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
-
-    session = MCSession(peer: localPeerID)
-    session.delegate = self
-
-    pollTimer = Timer.scheduledTimer(timeInterval: pollTiming,
-                                 target: self,
-                                 selector: #selector(triggerDiscoveryBrowsing),
-                                 userInfo: nil,
-                                 repeats: true)
-    pollTimer?.tolerance = pollTiming * 0.1
-
-    defer {
-      startStopBrowseAdvertise()
-    }
-  }
 
   var pollTimer: Timer?
 
@@ -87,7 +41,7 @@ class BtMan: NSObject {
       advertiser.stopAdvertisingPeer()
     }
 
-    advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: broadcastBack, serviceType: kMCSessionServiceType)
+    advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: nil, serviceType: kMCSessionServiceType)
     advertiser.delegate = self
 
     advertiser.startAdvertisingPeer()
@@ -114,11 +68,9 @@ extension BtMan: MCSessionDelegate {
     switch state {
     case .connected:
       api.foundPeer(peerID: peerID.displayName, date: Date())
-//      invoke(cmd: .foundPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     case .notConnected:
       api.lostPeer(peerID: peerID.displayName, date: Date())
-//      invoke(cmd: .lostPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     default:
       ()
@@ -129,7 +81,6 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, data, peerID)
 
     api.didReceiveFromPeer(peerID: peerID.displayName, data: data)
-//    invoke(cmd: .didReceiveFromPeer, args: .init(peerID: peerID.description, data: String(data: data, encoding: .utf8), time: nil))
   }
 
   func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -161,26 +112,6 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
         self.session.connectPeer(peerID, withNearbyConnectionData: data)
       } else if let error = error {
         debugPrint(error)
-      }
-    }
-
-
-
-
-    if let info = info {
-      let receivedMessages = BroadMessage.from(dic: info)
-
-      var hasAppend = false
-
-      receivedMessages.forEach { (newMessage) in
-        if !allDiscovered.contains(where: { $0.msg == newMessage.msg }) {
-          allDiscovered.append(newMessage)
-          hasAppend = true
-        }
-      }
-
-      if hasAppend {
-        triggerAdvertiseBroadcasting()
       }
     }
   }

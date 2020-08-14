@@ -7,7 +7,21 @@
 
 import UIKit
 
+protocol UiHandler: UITableViewDataSource, UITableViewDelegate {
+
+  var reloadHandler: AnyVoid { get set }
+  func broadcastMessage(_ text: String)
+
+}
+
 class ViewController: UIViewController {
+
+  var uiHandler: UiHandler? {
+    didSet {
+
+      uiHandler?.reloadHandler = reloadUI
+    }
+  }
 
   @IBOutlet weak var tableView: UITableView! 
 
@@ -15,17 +29,13 @@ class ViewController: UIViewController {
     tableView.reloadData()
   }
 
-  var meshc: MeshController!
-
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    meshc = MeshController(reloadHandler: reloadUI)
-
     title = "🤍❤️🤍"
 
-//    tableView.dataSource = meshc
-//    tableView.delegate = meshc
+    tableView.dataSource = uiHandler
+    tableView.delegate = uiHandler
   }
 
   @IBAction func composeDidTap(_ sender: Any) {
@@ -37,8 +47,7 @@ class ViewController: UIViewController {
 
     alert.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak alert] _ in
       if let text = alert?.textFields?.first?.text {
-//        self.btMan.sendMessage(text)
-//        self.meshc.send
+        self.uiHandler?.broadcastMessage(text)
       }
     }))
 
@@ -49,24 +58,31 @@ class ViewController: UIViewController {
 
 }
 
+extension MeshController {
 
-extension BtMan: UITableViewDataSource, UITableViewDelegate {
+  func dataAt(_ indexPath: IndexPath) -> BroadMessage {
+    #warning("stub")
+    return BroadMessage("")
+  }
 
+  var dataCount: Int {
+    #warning("stub")
+    return 0
+  }
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    allSorted.count
+    dataCount
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-    let bbc = allSorted[indexPath.row]
-
-    cell.t1?.text = bbc.msg
-    cell.t2?.text = bbc.ti.description
+    let data = dataAt(indexPath)
+    cell.t1?.text = data.msg
+    cell.t2?.text = data.ti.description
 
     return cell
-
   }
 
 }

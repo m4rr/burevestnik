@@ -18,14 +18,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     window?.tintColor = .systemRed
 
-    let uiReloader = (window?.rootViewController as? ViewController)?.reloadUI
-    let mesh = MeshController(reloadHandler: uiReloader)
+    let mesh = MeshController()
+    let nc = window?.rootViewController as? UINavigationController
+    let vc = nc?.topViewController as? ViewController
+    vc?.uiHandler = mesh
 
-    let wssURL = URL(string: "")!
+    let wssURL = URL(string: "wss://yandex.ru")!
     let local = WebSocketConn(wss: wssURL)
+    let _ = BtMan()
 
     apiMan = APIMan(meshController: mesh, localNetwork: local)
-
     mesh.api = apiMan
     local.api = apiMan
 
@@ -33,4 +35,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
 }
-

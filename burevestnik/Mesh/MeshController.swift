@@ -7,24 +7,26 @@
 
 import Foundation
 
-class MeshController {
+class MeshController: NSObject, UiHandler {
 
-  var reloadHandler: AnyVoid?
+  var reloadHandler: AnyVoid = { }
 
-  var storage = [BroadMessage]()
+  func broadcastMessage(_ text: String) {
+    peers.forEach { (peerID) in
+      if let data = text.data {
+        api?.sendToPeer(peerID: peerID, data: data)
+      }
+    }
+  }
+
+  var messages = [BroadMessage]()
+  var peers = [String]()
 
   weak var api: APIFuncs?
 
-  init(reloadHandler: AnyVoid?) {
-
-    self.reloadHandler = reloadHandler
-
-  }
-
   func notifySomeone() {
-    #warning("stub")
-
     api?.sendToPeer(peerID: "", data: Data())
+    #warning("stub")
   }
 
 }
@@ -40,7 +42,7 @@ extension MeshController: APICallbacks {
   }
 
   func didReceiveFromPeer(peerID: String, data: Data) {
-
+    reloadHandler()
   }
 
 }

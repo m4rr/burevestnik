@@ -32,10 +32,7 @@ protocol APICallbacks: class {
 }
 
 protocol API: APIFuncs & APICallbacks {
-
-//  var meshController: APICallbacks { get }
-//  var localNetwork: APIFuncs { get }
-
+  //
 }
 
 class APIMan: API {

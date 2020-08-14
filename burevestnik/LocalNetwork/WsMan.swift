@@ -162,7 +162,7 @@ extension WebSocketConn: APIFuncs {
   func sendToPeer(peerID: String, data: Data) {
     send(Request(cmd: .sendToPeer,
                  args: .init(peerID: peerID,
-                             data: String(data: data, encoding: .utf8),
+                             data: data.string,
                              time: nil)))
   }
 
