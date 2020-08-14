@@ -42,22 +42,23 @@ class WebSocketConn {
     let time: TimeInterval?
   }
 
+  weak var api: APICallbacks! {
+    didSet {
+      connect()
+    }
+  }
 
-  var api: API!
-
-  private let wsURL: URL
+  private let wssURL: URL
   private var wsTask: URLSessionWebSocketTask?
 
-  init(url: URL) {
-    self.wsURL = url
-
-    connect()
+  init(wss: URL) {
+    self.wssURL = wss
   }
 
   func connect() {
     wsTask?.cancel(with: .normalClosure, reason: nil)
 
-    wsTask = URLSession.shared.webSocketTask(with: wsURL)
+    wsTask = URLSession.shared.webSocketTask(with: wssURL)
     wsTask?.resume()
 
     receieve()
@@ -114,12 +115,7 @@ class WebSocketConn {
 
 extension WebSocketConn {
 
-
   func invoke(cmd: Command, args: Arguments) {
-
-    #warning("stub")
-
-    return;
 
     switch cmd {
 
@@ -170,16 +166,4 @@ extension WebSocketConn: APIFuncs {
                              time: nil)))
   }
 
-}
-
-extension Data {
-  var string: String? {
-    String(data: self, encoding: .utf8)
-  }
-}
-
-extension String {
-  var data: Data? {
-    data(using: .utf8)
-  }
 }

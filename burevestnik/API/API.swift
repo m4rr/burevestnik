@@ -40,8 +40,8 @@ protocol API: APIFuncs & APICallbacks {
 
 class APIMan: API {
 
-  weak var meshController: APICallbacks!
-  weak var localNetwork: APIFuncs!
+  var meshController: APICallbacks
+  var localNetwork: APIFuncs
 
   init(meshController: APICallbacks, localNetwork: APIFuncs) {
     self.meshController = meshController
@@ -51,25 +51,25 @@ class APIMan: API {
   // funcs
 
   func getTime() {
-    localNetwork?.getTime()
+    localNetwork.getTime()
   }
 
   func sendToPeer(peerID: String, data: Data) {
-    localNetwork?.sendToPeer(peerID: peerID, data: data)
+    localNetwork.sendToPeer(peerID: peerID, data: data)
   }
 
   // callbacks
 
   func foundPeer(peerID: String, date: Date) {
-    meshController?.foundPeer(peerID: peerID, date: date)
+    meshController.foundPeer(peerID: peerID, date: date)
   }
 
   func lostPeer(peerID: String, date: Date) {
-    meshController?.lostPeer(peerID: peerID, date: date)
+    meshController.lostPeer(peerID: peerID, date: date)
   }
 
   func didReceiveFromPeer(peerID: String, data: Data) {
-    meshController?.didReceiveFromPeer(peerID: peerID, data: data)
+    meshController.didReceiveFromPeer(peerID: peerID, data: data)
   }
 
 }

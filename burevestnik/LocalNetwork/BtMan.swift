@@ -52,31 +52,13 @@ class BtMan: NSObject {
 
   init(api: API) {
 
-//    self.reloadHandler = reloadHandler
-
-//    #if targetEnvironment(simulator)
-//    allDiscovered = [BroadMessage("Если кто-то снимает происходящее в Серебрянке - пришлите нам в @BGMnews_bot")]
-//    #else
-//    allDiscovered = [
-//      BroadMessage("Самым безопасным методом борьбы с усатым диктатором будет забастовка. Поэтому общайтесь.",
-//                   Date(timeIntervalSinceNow: 1)),
-//      BroadMessage("Лукашенко собрал совещание. Понятно из ситуации, что найважнейшими задачами, которые сейчас стоят перед органами власти",
-//                   Date(timeIntervalSinceNow: 2)),
-//      BroadMessage("Госмедиа заявляют, что Лукашенко начал совещание, где поднял тему сохранения порядка на улицах.",
-//                   Date(timeIntervalSinceNow: 3)),
-//    ]
-//    #endif
-
     self.api = api
 
     super.init()
 
-    #warning("declare api funcs")
-//    self.api.delegate = self
-
     localPeerID = MCPeerID(displayName: UIDevice.current.name)
 
-    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
+//    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
 
     session = MCSession(peer: localPeerID)
     session.delegate = self
