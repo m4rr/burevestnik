@@ -7,33 +7,85 @@
 
 import Foundation
 
-class API {
+protocol API {
 
-  var net: LocalNetwork!
+  func getTime()
 
-  func invoke(cmd: Command, args: Arguments) {
-    switch cmd {
-    case .getTime:
-      net.send(RPCResponse(time: Date().timeIntervalSince1970))
+  func foundPeer()
+  func lostPeer()
 
-    case .foundPeer:
-      net.send(RPCRequest(cmd: cmd, args: args))
+  func sendToPeer()
+  func didReceiveFromPeer()
 
-    case .lostPeer:
-      net.send(RPCRequest(cmd: cmd, args: args))
+  var delegate: APIDelegate? { get set }
 
-    case .sendToPeer:
-      guard let peerID = args.peerID, let data = args.data else { return }
+}
 
-      net.sendToPeer()
+protocol APIDelegate: class {
 
-      sessionSend(to: peerID, data: data)
+  func sendToPeer()
 
-    case .didReceiveFromPeer:
-      net.send(RPCRequest(cmd: cmd, args: args))
+}
 
-    }
+protocol NetInvoker {
+  func invoke(cmd: Command, args: Arguments)
+}
+
+class RealAPI: API {
+
+  var btMan: BtMan!
+
+  weak var delegate: APIDelegate?
+
+  func getTime() {
+    //
   }
+
+  func foundPeer() {
+    // meshCon.foundPeer
+  }
+
+  func lostPeer() {
+    // meshCon.lostPeer
+  }
+
+  func sendToPeer() {
+    btMan.sendToPeer()
+  }
+
+  func didReceiveFromPeer() {
+    // meshCon.didReceiveFromPeer
+  }
+
+
+
+}
+
+
+class SimulationAPI: API {
+
+  weak var delegate: APIDelegate?
+
+  func getTime() {
+    //
+  }
+
+  func foundPeer() {
+    // meshCon.foundPeer
+  }
+
+  func lostPeer() {
+    // meshCon.lostPeer
+  }
+
+  func sendToPeer() {
+    //    BtMan().send
+  }
+
+  func didReceiveFromPeer() {
+    // meshCon.didReceiveFromPeer
+  }
+
 
 
 }

@@ -10,7 +10,9 @@ import MultipeerConnectivity
 
 private let kMCSessionServiceType = "burevestnik"
 
-class BtMan: NSObject { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
+class BtMan: NSObject, APIDelegate { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
+
+  var api: API
 
   var localPeerID: MCPeerID!
   var browser: MCNearbyServiceBrowser!
@@ -21,7 +23,7 @@ class BtMan: NSObject { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
 
   private var allDiscovered: [BroadMessage] = [] {
     didSet {
-      reloadHandler()
+//      reloadHandler()
     }
   }
 
@@ -46,12 +48,14 @@ class BtMan: NSObject { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     return res
   }
 
-  var reloadHandler: () -> Void
 
+  func sendToPeer() {
+    #warning("stub")
+  }
 
+  init(api: API) {
 
-  init(reloadHandler: @escaping () -> Void) {
-    self.reloadHandler = reloadHandler
+//    self.reloadHandler = reloadHandler
 
 //    #if targetEnvironment(simulator)
 //    allDiscovered = [BroadMessage("Если кто-то снимает происходящее в Серебрянке - пришлите нам в @BGMnews_bot")]
@@ -66,7 +70,11 @@ class BtMan: NSObject { //, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
 //    ]
 //    #endif
 
+    self.api = api
+
     super.init()
+
+    self.api.delegate = self
 
     localPeerID = MCPeerID(displayName: UIDevice.current.name)
 
@@ -126,10 +134,12 @@ extension BtMan: MCSessionDelegate {
 
     switch state {
     case .connected:
-      invoke(cmd: .foundPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
+      api.foundPeer()
+//      invoke(cmd: .foundPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     case .notConnected:
-      invoke(cmd: .lostPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
+      api.lostPeer()
+//      invoke(cmd: .lostPeer, args: .init(peerID: peerID.description, data: nil, time: Date().timeIntervalSince1970))
 
     default:
       ()
@@ -139,7 +149,8 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
     debugPrint(#function, data, peerID)
 
-    invoke(cmd: .didReceiveFromPeer, args: .init(peerID: peerID.description, data: String(data: data, encoding: .utf8), time: nil))
+    api.didReceiveFromPeer()
+//    invoke(cmd: .didReceiveFromPeer, args: .init(peerID: peerID.description, data: String(data: data, encoding: .utf8), time: nil))
   }
 
   func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -169,6 +180,8 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
     session.nearbyConnectionData(forPeer: peerID) { (data, error) in
       if let data = data {
         self.session.connectPeer(peerID, withNearbyConnectionData: data)
+      } else if let error = error {
+        debugPrint(error)
       }
     }
 

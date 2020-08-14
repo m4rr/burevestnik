@@ -11,21 +11,21 @@ class ViewController: UIViewController {
 
   @IBOutlet weak var tableView: UITableView! 
 
-  var btMan: BtMan!
-
-  func reloadHandler() {
+  func reloadUI() {
     tableView.reloadData()
   }
+
+  var meshc: MeshController!
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    meshc = MeshController(reloadHandler: reloadUI)
+
     title = "🤍❤️🤍"
 
-    btMan = BtMan(reloadHandler: reloadHandler)
-
-    tableView.dataSource = btMan
-    tableView.delegate = btMan
+//    tableView.dataSource = meshc
+//    tableView.delegate = meshc
   }
 
   @IBAction func composeDidTap(_ sender: Any) {
@@ -37,7 +37,8 @@ class ViewController: UIViewController {
 
     alert.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak alert] _ in
       if let text = alert?.textFields?.first?.text {
-        self.btMan.sendMessage(text)
+//        self.btMan.sendMessage(text)
+//        self.meshc.send
       }
     }))
 

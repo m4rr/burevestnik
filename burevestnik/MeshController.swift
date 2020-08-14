@@ -1,63 +1,25 @@
 //
-//  Mesh.swift
+//  MeshController.swift
 //  burevestnik
 //
-//  Created by Marat Saytakov on 14.08.2020.
+//  Created by Marat on 14.08.2020.
 //
 
 import Foundation
 
-protocol MeshNetInvoker {
-  func invoke(cmd: Command, args: Arguments)
-}
+class MeshController {
 
-enum Command: String, Codable {
-  case
-    getTime,
-    foundPeer,
-    lostPeer,
-    sendToPeer,
-    didReceiveFromPeer
-}
+  var reloadHandler: () -> Void
 
-struct Arguments: Codable {
-  let peerID: String?, data: String?, time: TimeInterval?
-}
+  var storage = [BroadMessage]()
 
-struct RPCRequest: Codable {
-  let cmd: Command, args: Arguments
-}
+  var api: API 
 
-struct RPCResponse: Codable {
-  enum Result: String, Codable {
-    case ok
+  init(reloadHandler: @escaping () -> Void) {
+
+    self.reloadHandler = reloadHandler
+
+    api = SimulationAPI()
   }
 
-  var result: Result = .ok
-  let time: TimeInterval?
 }
-
-//class APIMan: MeshNetInvoker {
-//
-//  func invoke(cmd: Command, args: Arguments) {
-//    switch cmd {
-//    case .getTime:
-//      return .init(time: Date().timeIntervalSince1970)
-//
-//    case .foundPeer:
-//      ()
-//    case .lostPeer:
-//      ()
-//    case .sendToPeer:
-//      // BtMan.sessionSend(to: peerID, data: data)
-//      ()
-//    case .didReceiveFromPeer:
-//      ()
-//    }
-//
-//    return .init(time: nil)
-//  }
-//
-//}
-
-

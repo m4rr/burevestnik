@@ -7,26 +7,7 @@
 
 import Foundation
 
-protocol LocalNetwork {
-
-  var delegate: LocalNetworkDelegate? { get }
-
-  func sendToPeer()
-
-}
-
-protocol LocalNetworkDelegate {
-
-  func foundPeer()
-  func lostPeer()
-
-  func didReceiveFromPeer()
-
-}
-
-class WebSocketConn: LocalNetwork {
-
-  var delegate: LocalNetworkDelegate?
+class WebSocketConn {
 
   func sendToPeer() {
     #warning("stub")
@@ -35,11 +16,10 @@ class WebSocketConn: LocalNetwork {
   private let wsURL: URL
   private var wsTask: URLSessionWebSocketTask?
 
-  private let mesh: MeshNetInvoker
-
-  init(url: URL, delegate: LocalNetworkDelegate) {
+  init(url: URL) {
     self.wsURL = url
-    self.delegate = delegate
+
+    connect()
   }
 
   func connect() {
@@ -69,7 +49,7 @@ class WebSocketConn: LocalNetwork {
         case .data(let data):
           guard let request = try? JSONDecoder().decode(RPCRequest.self, from: data) else { return }
 
-          self?.mesh.invoke(cmd: request.cmd, args: request.args)
+          self?.invoke(cmd: request.cmd, args: request.args)
 
         default:
           fatalError()
@@ -98,6 +78,40 @@ class WebSocketConn: LocalNetwork {
     } else if let rp = (data as? RPCRequest), let json = try? JSONEncoder().encode(rp) {
       debugPrint(json)
       s(json)
+    }
+  }
+
+}
+
+extension WebSocketConn {
+
+  func invoke(cmd: Command, args: Arguments) {
+
+    #warning("stub")
+
+    return;
+
+
+    switch cmd {
+    case .getTime:
+      send(RPCResponse(time: Date().timeIntervalSince1970))
+
+    case .foundPeer:
+      send(RPCRequest(cmd: cmd, args: args))
+
+    case .lostPeer:
+      send(RPCRequest(cmd: cmd, args: args))
+
+    case .sendToPeer:
+      guard let peerID = args.peerID, let data = args.data else { return }
+
+      sendToPeer()
+
+//      sessionSend(to: peerID, data: data)
+
+    case .didReceiveFromPeer:
+      send(RPCRequest(cmd: cmd, args: args))
+
     }
   }
 
