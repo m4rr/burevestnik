@@ -10,4 +10,4 @@ P.S. Soon: beta version would be smarter and would have much more optimal routes
 
 ## Architecture Overview
 
-![artwork/architecture-overview@2x.jpeg](Architecture Overview)
+<img src=artwork/architecture-overview@2x.jpeg alt='Architecture Overview' width=400>
