@@ -1,4 +1,5 @@
 *.sketch 
+*.DS_Store
 
 # Xcode
 #
