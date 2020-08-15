@@ -82,31 +82,29 @@ class WebSocketConn {
           self?.invoke(cmd: request.cmd, args: request.args)
 
         default:
-          fatalError()
+          assertionFailure()
         }
 
         self?.receieve()
-
       }
     }
   }
 
-  func send(_ data: Codable) {
-    func s(_ d: Data) {
-      wsTask?.send(.data(d)) { (err) in
+  func sendToWs(_ data: Codable) {
+
+    func _send(_ str: String) {
+      wsTask?.send(.string(str)) { (err) in
         if let err = err {
           debugPrint(err)
         }
       }
     }
 
-    if let rq = (data as? Request), let json = try? JSONEncoder().encode(rq) {
-      debugPrint(json)
-      s(json)
+    if let rq = (data as? Request), let json = try? JSONEncoder().encode(rq).string {
+      _send(json)
 
-    } else if let rp = (data as? Response), let json = try? JSONEncoder().encode(rp) {
-      debugPrint(json)
-      s(json)
+    } else if let rp = (data as? Response), let json = try? JSONEncoder().encode(rp).string {
+      _send(json)
     }
   }
 
@@ -156,14 +154,14 @@ extension WebSocketConn {
 extension WebSocketConn: APIFuncs {
 
   func getTime() {
-    send(Response(time: Date().timeIntervalSince1970))
+    sendToWs(Response(time: Date().timeIntervalSince1970))
   }
 
   func sendToPeer(peerID: String, data: Data) {
-    send(Request(cmd: .sendToPeer,
-                 args: .init(peerID: peerID,
-                             data: data.string,
-                             time: nil)))
+    sendToWs(Request(cmd: .sendToPeer,
+                     args: .init(peerID: peerID,
+                                 data: data.string,
+                                 time: nil)))
   }
 
 }
