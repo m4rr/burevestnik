@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let vc = nc?.topViewController as? ViewController
     vc?.uiHandler = mesh
 
-    let wssURL = URL(string: "wss://yandex.ru")!
+    let wssURL = URL(string: "ws://0.0.0.0:80/ws_rpc?lat=53.904153&lon=27.556925")!
     let local = WebSocketConn(wss: wssURL)
     let _ = BtMan()
 
