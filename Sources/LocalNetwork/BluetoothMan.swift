@@ -142,10 +142,6 @@ extension BtMan {
 
 extension BtMan: APIFuncs {
 
-  func getTime() {
-    return api.getTime()
-  }
-
   func sendToPeer(peerID: String, data: Data) {
     guard let s = data.string else { return }
     sessionSend(to: peerID, data: s)

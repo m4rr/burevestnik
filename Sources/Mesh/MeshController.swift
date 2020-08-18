@@ -32,6 +32,12 @@ class MeshController: NSObject, UiHandler {
 }
 
 extension MeshController: APICallbacks {
+  
+  func tick(ts: Date) {
+    // do something if needed
+    
+    
+  }
 
   func foundPeer(peerID: String, date: Date) {
 

@@ -20,17 +20,17 @@ enum Command: String, Codable {
 }
 
 struct Arguments: Codable {
-  let peerID: String?, data: String?, time: TimeInterval?
+  let peerID: String?, data: String?, TS: TimeInterval?
 
   var date: Date? {
-    time.flatMap(Date.init(timeIntervalSince1970:))
+    TS.flatMap(Date.init(timeIntervalSince1970:))
   }
 }
 
 class WebSocketConn {
 
   struct Request: Codable {
-    let cmd: Command, args: Arguments
+    let Cmd: Command, Args: Arguments
   }
 
   struct Response: Codable {
@@ -79,7 +79,7 @@ class WebSocketConn {
 
           guard let data = text.data, let request = try? JSONDecoder().decode(Request.self, from: data) else { return }
 
-          self?.invoke(cmd: request.cmd, args: request.args)
+          self?.invoke(cmd: request.Cmd, args: request.Args)
 
         default:
           assertionFailure()
@@ -120,7 +120,7 @@ extension WebSocketConn {
     // funcs
 
     case .getTime:
-      self.getTime()
+      self.tick()
 
     case .sendToPeer:
       guard let peerID = args.peerID, let data = args.data?.data else { return }
@@ -153,15 +153,15 @@ extension WebSocketConn {
 
 extension WebSocketConn: APIFuncs {
 
-  func getTime() {
+  func tick() {
     sendToWs(Response(time: Date().timeIntervalSince1970))
   }
 
   func sendToPeer(peerID: String, data: Data) {
-    sendToWs(Request(cmd: .sendToPeer,
-                     args: .init(peerID: peerID,
+    sendToWs(Request(Cmd: .sendToPeer,
+                     Args: .init(peerID: peerID,
                                  data: data.string,
-                                 time: nil)))
+                                 TS: nil)))
   }
 
 }

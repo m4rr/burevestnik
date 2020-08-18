@@ -11,9 +11,6 @@ import Foundation
 
 protocol APIFuncs: class {
 
-  /// 1
-  func getTime()
-
   /// 4
   func sendToPeer(peerID: String, data: Data)
 
@@ -21,6 +18,9 @@ protocol APIFuncs: class {
 
 protocol APICallbacks: class {
 
+  /// 1
+  func tick(ts: Date)
+  
   /// 2
   func foundPeer(peerID: String, date: Date)
   /// 3
@@ -47,8 +47,8 @@ class APIMan: API {
 
   // funcs
 
-  func getTime() {
-    localNetwork.getTime()
+  func tick(ts: Date) {
+    meshController.tick(ts: ts)
   }
 
   func sendToPeer(peerID: String, data: Data) {
