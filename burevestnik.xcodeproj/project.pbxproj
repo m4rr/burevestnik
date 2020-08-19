@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032BCFDF24ED8D1400543B66 /* LocationMan.swift */; };
 		0341A24D24E58A9F001C8005 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */; };
 		03527B2224E6B05B00E9C6DB /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2124E6B05B00E9C6DB /* API.swift */; };
 		03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2324E6B06900E9C6DB /* WebSocketMan.swift */; };
@@ -15,12 +16,15 @@
 		036E936824E3E00D001DA125 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036E936724E3E00D001DA125 /* ViewController.swift */; };
 		036E936D24E3E013001DA125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 036E936C24E3E013001DA125 /* Assets.xcassets */; };
 		036E937824E3EA9C001DA125 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 036E937724E3EA9C001DA125 /* Main.storyboard */; };
+		0383B09C24ED5F830098E91F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0383B09B24ED5F830098E91F /* Reachability.m */; };
+		0383B09F24ED60570098E91F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0383B09E24ED60570098E91F /* SystemConfiguration.framework */; };
 		03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BluetoothMan.swift */; };
 		03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE438124E44158000D82B7 /* BroadMessage.swift */; };
 		03D7236924E6D05F003B3211 /* MeshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D7236824E6D05F003B3211 /* MeshController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		032BCFDF24ED8D1400543B66 /* LocationMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMan.swift; sourceTree = "<group>"; };
 		0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03527B1F24E6AE5A00E9C6DB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		03527B2124E6B05B00E9C6DB /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
@@ -32,6 +36,10 @@
 		036E936C24E3E013001DA125 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		036E937124E3E013001DA125 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		036E937724E3EA9C001DA125 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		0383B09924ED5F820098E91F /* burevestnik-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "burevestnik-Bridging-Header.h"; sourceTree = "<group>"; };
+		0383B09A24ED5F830098E91F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		0383B09B24ED5F830098E91F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		0383B09E24ED60570098E91F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		03AE437F24E44127000D82B7 /* BluetoothMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothMan.swift; sourceTree = "<group>"; };
 		03AE438124E44158000D82B7 /* BroadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadMessage.swift; sourceTree = "<group>"; };
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
@@ -44,12 +52,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0383B09F24ED60570098E91F /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		032BCFE124ED8FC800543B66 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0383B09D24ED5F8A0098E91F /* Vendor */,
+				0383B09924ED5F820098E91F /* burevestnik-Bridging-Header.h */,
+				032BCFDF24ED8D1400543B66 /* LocationMan.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		0367608A24E72B9F00556EFA /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -59,6 +78,7 @@
 				03D4D77E24E6F55D0083432E /* Mesh */,
 				03D4D77D24E6F5530083432E /* API */,
 				03D4D77C24E6F54A0083432E /* LocalNetwork */,
+				032BCFE124ED8FC800543B66 /* Helpers */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -94,9 +114,19 @@
 			path = burevestnik;
 			sourceTree = "<group>";
 		};
+		0383B09D24ED5F8A0098E91F /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				0383B09A24ED5F830098E91F /* Reachability.h */,
+				0383B09B24ED5F830098E91F /* Reachability.m */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
 		03C8656B24E44D4000FAC1B5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0383B09E24ED60570098E91F /* SystemConfiguration.framework */,
 				03C8656C24E44D4000FAC1B5 /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
@@ -168,6 +198,7 @@
 				TargetAttributes = {
 					036E935F24E3E00D001DA125 = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
 					};
 				};
 			};
@@ -210,10 +241,12 @@
 				03D7236924E6D05F003B3211 /* MeshController.swift in Sources */,
 				03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */,
 				036E936824E3E00D001DA125 /* ViewController.swift in Sources */,
+				032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */,
 				0367608924E719B900556EFA /* Extensions.swift in Sources */,
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
 				03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */,
 				03527B2224E6B05B00E9C6DB /* API.swift in Sources */,
+				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
 				03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -341,6 +374,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = burevestnik/burevestnik.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
@@ -352,6 +386,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.burevestnik.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Helpers/burevestnik-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -361,6 +397,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = burevestnik/burevestnik.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
@@ -372,6 +409,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.burevestnik.iosapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Sources/Helpers/burevestnik-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
