@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let mesh = MeshController()
     let nc = window?.rootViewController as? UINavigationController
-    let vc = nc?.topViewController as? ViewController
+    let vc = (nc?.topViewController ?? window?.rootViewController) as? ViewController
     vc?.uiHandler = mesh
 
     let wssURL = URL(string: "ws://0.0.0.0:80/ws_rpc?lat=53.904153&lon=27.556925")!

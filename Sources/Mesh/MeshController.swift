@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MeshController: NSObject, UiHandler {
+class MeshController: NSObject {
 
   var reloadHandler: AnyVoid = { }
 
@@ -19,7 +19,7 @@ class MeshController: NSObject, UiHandler {
     }
   }
 
-  var messages = [BroadMessage]()
+  var messages: [BroadMessage] = [.init("Сообщения пока не работают")]
   var peers = [String]()
 
   weak var api: APIFuncs?

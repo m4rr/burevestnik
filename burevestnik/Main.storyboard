@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7tl-Y3-ado">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,18 +10,21 @@
         <!--Navigation Controller-->
         <scene sceneID="0fK-Y3-eng">
             <objects>
-                <navigationController id="7tl-Y3-ado" sceneMemberID="viewController">
+                <navigationController navigationBarHidden="YES" toolbarHidden="NO" id="7tl-Y3-ado" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KKw-3F-xNg">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="fNg-Zk-SdR">
+                        <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
-                        <segue destination="ocf-0N-eWr" kind="relationship" relationship="rootViewController" id="sz3-ns-pKG"/>
+                        <segue destination="ocf-0N-eWr" kind="relationship" relationship="rootViewController" id="hxh-c6-76q"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cRN-3F-HMi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-949" y="92"/>
+            <point key="canvasLocation" x="-1042" y="92"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="LOe-A4-IHz">
@@ -77,6 +79,7 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="f3n-OB-95e" secondAttribute="bottom" id="6Lf-bH-qbg"/>
                             <constraint firstItem="BRi-RB-osI" firstAttribute="trailing" secondItem="f3n-OB-95e" secondAttribute="trailing" id="FIu-Ik-mnI"/>
@@ -85,18 +88,80 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="BRi-RB-osI"/>
                     </view>
-                    <navigationItem key="navigationItem" id="9gd-Se-xJK">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="8Oa-rN-Xw4">
+                    <toolbarItems>
+                        <barButtonItem title="GPS (off)" id="AZe-T1-fat">
+                            <connections>
+                                <action selector="gpsButtonDidTap:" destination="ocf-0N-eWr" id="53C-KS-Plg"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="UeC-6H-rD7"/>
+                        <barButtonItem title="0 Peers" id="ekM-jL-wk8">
+                            <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="brC-eb-E0D"/>
+                        <barButtonItem title="WWAN" id="Bna-7x-K4y">
+                            <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="I45-5w-Nld"/>
+                        <barButtonItem systemItem="compose" id="8Oa-rN-Xw4">
                             <connections>
                                 <action selector="composeDidTap:" destination="ocf-0N-eWr" id="abi-Rs-bZW"/>
                             </connections>
                         </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" id="9gd-Se-xJK">
+                        <barButtonItem key="leftBarButtonItem" title="toggle" id="Hl8-ju-VoH"/>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="gpsButton" destination="AZe-T1-fat" id="j5W-gO-tTD"/>
+                        <outlet property="mapViewWrapperHeight" destination="N5D-qD-mDl" id="XXI-ft-pZT"/>
+                        <outlet property="mapWrapperView" destination="ViE-0R-EnJ" id="9yT-1l-D3s"/>
+                        <outlet property="peersButton" destination="ekM-jL-wk8" id="5sp-e7-UeI"/>
                         <outlet property="tableView" destination="f3n-OB-95e" id="VwG-OC-4AU"/>
+                        <outlet property="wwanButton" destination="Bna-7x-K4y" id="3Vy-aa-6a7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="crg-Nd-S1L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ViE-0R-EnJ" customClass="MapWrapperView" customModule="burevestnik" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="400" height="250"/>
+                    <subviews>
+                        <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" showsCompass="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VGW-au-ody">
+                            <rect key="frame" x="0.0" y="0.0" width="400" height="250"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="250" id="h6R-Kt-dBb"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="h6R-Kt-dBb"/>
+                                </mask>
+                            </variation>
+                        </mapView>
+                        <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WxO-3w-79A">
+                            <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
+                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="5uL-B0-uje">
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </view>
+                            <blurEffect style="systemUltraThinMaterial"/>
+                        </visualEffectView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="VGW-au-ody" secondAttribute="trailing" id="1bp-ak-Ctq"/>
+                        <constraint firstItem="VGW-au-ody" firstAttribute="leading" secondItem="ViE-0R-EnJ" secondAttribute="leading" id="9Ll-FS-D43"/>
+                        <constraint firstAttribute="height" constant="250" id="N5D-qD-mDl"/>
+                        <constraint firstItem="WxO-3w-79A" firstAttribute="top" secondItem="ViE-0R-EnJ" secondAttribute="top" id="jDV-oP-bAR"/>
+                        <constraint firstAttribute="trailing" secondItem="WxO-3w-79A" secondAttribute="trailing" id="mAr-UN-fDf"/>
+                        <constraint firstAttribute="bottom" secondItem="VGW-au-ody" secondAttribute="bottom" id="qKb-Je-4gt"/>
+                        <constraint firstItem="WxO-3w-79A" firstAttribute="leading" secondItem="ViE-0R-EnJ" secondAttribute="leading" id="tfJ-h3-6G2"/>
+                        <constraint firstAttribute="top" secondItem="VGW-au-ody" secondAttribute="top" id="z4S-Zb-B8S"/>
+                        <constraint firstItem="WxO-3w-79A" firstAttribute="bottom" secondItem="Yi4-iz-JD4" secondAttribute="top" id="zUC-EE-Xri"/>
+                    </constraints>
+                    <viewLayoutGuide key="safeArea" id="Yi4-iz-JD4"/>
+                    <connections>
+                        <outlet property="mapView" destination="VGW-au-ody" id="gu8-lK-I3W"/>
+                    </connections>
+                </view>
             </objects>
             <point key="canvasLocation" x="-200.00000000000003" y="91.741071428571431"/>
         </scene>

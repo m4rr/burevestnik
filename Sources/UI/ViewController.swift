@@ -16,19 +16,67 @@ protocol UiHandler: UITableViewDataSource, UITableViewDelegate {
 
 class ViewController: UIViewController {
 
+  lazy var reach = Reachability.forInternetConnection()
+
   var uiHandler: UiHandler? {
     didSet {
-
       uiHandler?.reloadHandler = reloadUI
     }
   }
 
-  @IBOutlet weak var tableView: UITableView! 
+  @IBOutlet weak var tableView: UITableView!
+  @IBOutlet var mapViewWrapperHeight: NSLayoutConstraint!
+  @IBOutlet var mapWrapperView: MapWrapperView!
+
+  @IBOutlet weak var gpsButton: UIBarButtonItem!
+  @IBOutlet weak var peersButton: UIBarButtonItem!
+  @IBOutlet weak var wwanButton: UIBarButtonItem!
 
   func reloadUI() {
     tableView.reloadData()
   }
 
+  private var locMan: LocationMan?
+  private var isAnimating = false
+  private var isGPSSharingOn = true {
+    didSet {
+      if isGPSSharingOn {
+        locMan = LocationMan(mapWrapperView.update)
+      } else {
+        locMan = nil
+
+        mapWrapperView.update(with: nil)
+      }
+
+      guard !isAnimating else { return }
+      isAnimating = true
+
+      let newHeight = isGPSSharingOn ? 250 : view.safeAreaInsets.top
+      let topInset = newHeight - self.view.safeAreaInsets.top
+
+      mapViewWrapperHeight.constant = newHeight
+
+      UIView.animate(
+        withDuration: 0.150,
+        delay: 0,
+        options: .curveEaseOut,
+        animations: {
+          self.view.layoutIfNeeded()
+
+          self.tableView.contentInset.top = topInset
+      },
+        completion: { _ in
+          self.isAnimating = false
+      })
+
+      gpsButton.title = isGPSSharingOn ? "GPS (on)" : "GPS (off)"
+    }
+  }
+  
+  @IBAction func gpsButtonDidTap(_ sender: UIBarButtonItem) {
+    isGPSSharingOn.toggle()
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -36,6 +84,37 @@ class ViewController: UIViewController {
 
     tableView.dataSource = uiHandler
     tableView.delegate = uiHandler
+    
+    setupMapWrapperView()
+
+    DispatchQueue.main.async { self.isGPSSharingOn = false }
+
+    setupReachability()
+  }
+
+  private func setupMapWrapperView() {
+    view.addSubview(mapWrapperView)
+    mapWrapperView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    mapWrapperView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+  }
+
+  private func setupReachability() {
+
+    wwanButton.title = reach?.currentReachabilityString()
+
+    reach?.reachableBlock = { reach in
+      DispatchQueue.main.async { [weak self] in
+        self?.wwanButton.title = reach?.currentReachabilityString()
+      }
+    }
+
+    reach?.unreachableBlock = { _ in
+      DispatchQueue.main.async { [weak self] in
+        self?.wwanButton.title = "No Internet"
+      }
+    }
+
+    reach?.startNotifier()
   }
 
   @IBAction func composeDidTap(_ sender: Any) {
@@ -58,16 +137,16 @@ class ViewController: UIViewController {
 
 }
 
-extension MeshController {
+extension MeshController: UiHandler {
 
   func dataAt(_ indexPath: IndexPath) -> BroadMessage {
     #warning("stub")
-    return BroadMessage("")
+    return messages[indexPath.row]
   }
 
   var dataCount: Int {
     #warning("stub")
-    return 0
+    return messages.count
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,12 +163,5 @@ extension MeshController {
 
     return cell
   }
-
-}
-
-class Cell: UITableViewCell {
-
-  @IBOutlet weak var t1: UILabel!
-  @IBOutlet weak var t2: UILabel!
 
 }

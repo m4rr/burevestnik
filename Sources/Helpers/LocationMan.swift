@@ -12,13 +12,13 @@ class LocationMan: NSObject {
 
   private let man = CLLocationManager()
 
-  private var reloadUI: () -> Void = {}
+  private var reloadUI: (CLLocation?) -> Void = {_ in}
 
   var location: CLLocation? {
     man.location
   }
 
-  init(_ h: @escaping () -> Void) {
+  init(_ h: @escaping (CLLocation?) -> Void) {
     super.init()
 
     reloadUI = h
@@ -41,8 +41,8 @@ class LocationMan: NSObject {
       man.requestWhenInUseAuthorization()
 
     case .authorizedWhenInUse, .authorizedAlways:
-
-      reloadUI()
+      ()
+//      DispatchQueue.main.async(execute: reloadUI)
 
     @unknown default:
       ()
@@ -58,11 +58,25 @@ extension LocationMan: CLLocationManagerDelegate {
 
     switch status {
     case .authorizedWhenInUse, .authorizedAlways:
-      reloadUI()
+      
+      manager.requestLocation()
 
     default:
       ()
     }
+  }
+
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+
+      DispatchQueue.main.async {
+        self.reloadUI(locations.last)
+      }
+
+    
+  }
+
+  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    debugPrint(error.localizedDescription, (error as? CLError)?.code)
   }
 
 }

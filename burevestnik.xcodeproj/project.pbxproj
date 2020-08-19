@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032BCFDF24ED8D1400543B66 /* LocationMan.swift */; };
+		032BCFE324ED923A00543B66 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032BCFE224ED923A00543B66 /* Views.swift */; };
 		0341A24D24E58A9F001C8005 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */; };
 		03527B2224E6B05B00E9C6DB /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2124E6B05B00E9C6DB /* API.swift */; };
 		03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2324E6B06900E9C6DB /* WebSocketMan.swift */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		032BCFDF24ED8D1400543B66 /* LocationMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMan.swift; sourceTree = "<group>"; };
+		032BCFE224ED923A00543B66 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		03527B1F24E6AE5A00E9C6DB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		03527B2124E6B05B00E9C6DB /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				036E936724E3E00D001DA125 /* ViewController.swift */,
+				032BCFE224ED923A00543B66 /* Views.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
 				03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */,
 				03527B2224E6B05B00E9C6DB /* API.swift in Sources */,
+				032BCFE324ED923A00543B66 /* Views.swift in Sources */,
 				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
 				03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */,
 			);

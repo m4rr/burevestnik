@@ -27,7 +27,9 @@
 		<string>_burevestnik._tcp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Вперед, буревестник! Солнце взошло! Новых известий время пришло</string>
+	<string>Самое главное: локальная сеть используется для общения без интернета.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Чтобы видеть собеседников на карте, а им — видеть вас.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
