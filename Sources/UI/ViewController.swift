@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  burevestnik
-//
-//  Created by Marat Saytakov on 12.08.2020.
-//
-
 import UIKit
 
 protocol UiHandler: UITableViewDataSource, UITableViewDelegate {
