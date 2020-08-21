@@ -291,25 +291,28 @@ class SimplePeer1 {
 
 class MeshController: NSObject {
 
-  var reloadHandler: AnyVoid = { }
+  private let simplePeer = SimplePeer1.NewSimplePeer1(label: "test-iphone-11-sim")
+
+  var reloadHandler: AnyVoid = { fatalError() }
 
   func broadcastMessage(_ text: String) {
-    peers.forEach { (peerID) in
-      if let data = text.data {
-        api?.sendToPeer(peerID: peerID, data: data)
-      }
-    }
+//    peers.forEach { (peerID) in
+//      if let data = text.data {
+//        api?.sendToPeer(peerID: peerID, data: data)
+//      }
+//    }
+    fatalError()
   }
 
   var messages: [BroadMessage] = [.init("Сообщения пока не работают")]
-  var peers = [String]()
+//  var peers = [String]()
 
   weak var api: APIFuncs?
 
-  func notifySomeone() {
-    api?.sendToPeer(peerID: "", data: Data())
-    #warning("stub")
-  }
+//  func notifySomeone() {
+//    api?.sendToPeer(peerID: "", data: Data())
+//    #warning("stub")
+//  }
 
 }
 
@@ -318,19 +321,22 @@ extension MeshController: APICallbacks {
   func tick(ts: Date) {
     // do something if needed
     
-    
+    simplePeer.HandleTimeTick(ts: ts.timeIntervalSince1970)
   }
 
   func foundPeer(peerID: String, date: Date) {
-
+    simplePeer.HandleAppearedPeer(id: peerID)
   }
 
   func lostPeer(peerID: String, date: Date) {
-
+    simplePeer.HandleDisappearedPeer(id: peerID)
   }
 
   func didReceiveFromPeer(peerID: String, data: Data) {
-    reloadHandler()
+//    reloadHandler()
+    if let str = data.string {
+      simplePeer.HandleMessage(id: peerID, data: str)
+    }
   }
 
 }
