@@ -32,6 +32,7 @@
 		03527B2124E6B05B00E9C6DB /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		03527B2324E6B06900E9C6DB /* WebSocketMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMan.swift; sourceTree = "<group>"; };
 		0367608824E719B900556EFA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		0368033624F000E700C945C9 /* Minsk.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Minsk.gpx; sourceTree = "<group>"; };
 		036E936024E3E00D001DA125 /* burevestnik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = burevestnik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		036E936324E3E00D001DA125 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		036E936724E3E00D001DA125 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 				036E937124E3E013001DA125 /* Info.plist */,
 				0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */,
 				036E937724E3EA9C001DA125 /* Main.storyboard */,
+				0368033624F000E700C945C9 /* Minsk.gpx */,
 			);
 			path = burevestnik;
 			sourceTree = "<group>";
