@@ -80,7 +80,6 @@ func newPeerToPeerSyncer(sender: @escaping (pkgStateUpdate) -> Void) -> peerToPe
   )
 }
 
-
 // PeerUserState contains user data
 struct PeerUserState: Codable  {
   let
@@ -93,7 +92,6 @@ struct peerState: Codable  {
     UserState: PeerUserState,
     UpdateTS:  meshsim.NetworkTime
 }
-
 
 // SimplePeer1 provides simplest flood peer strategy
 class SimplePeer1 {
@@ -145,12 +143,10 @@ class SimplePeer1 {
     }
   }
 
-
   // HandleDisappearedPeer implements crowd.MeshActor
   func HandleDisappearedPeer(id: meshsim.NetworkID) {
     syncers.removeValue(forKey: id)
   }
-
 
   func handleNewIncomingState(sourceID: meshsim.NetworkID, update: pkgStateUpdate) {
 
@@ -208,9 +204,6 @@ class SimplePeer1 {
 
       let ack = pkgStateUpdateReceivedAck(TS: update.TS)
 
-
-
-
       guard let ser = try? JSONEncoder().encode(ack).string,
             let bt2 = try? JSONEncoder().encode(pkg(Type: "pkgStateUpdateReceivedAck", Content: ser)).string else {
         debugPrint("th.logger.Println(err.Error())")
@@ -231,7 +224,6 @@ class SimplePeer1 {
     }
   }
 
-
   // RegisterMessageSender implements crowd.MeshActor
   func RegisterMessageSender(handler: @escaping (_ id: meshsim.NetworkID, _ data: meshsim.NetworkMessage) -> Void) {
     self.sender = handler
@@ -250,11 +242,10 @@ class SimplePeer1 {
     }
   }
 
-//  // DebugData implements crowd.MeshActor
-//  func (th *SimplePeer1) DebugData() interface{} {
-//    return th.meshNetworkState
-//  }
-
+  // DebugData implements crowd.MeshActor
+  func DebugData() -> [meshsim.NetworkID: peerState] {
+    return meshNetworkState
+  }
 
   // NewSimplePeer1 returns new SimplePeer1
   class func NewSimplePeer1(label: String) -> SimplePeer1 {
@@ -285,15 +276,15 @@ class SimplePeer1 {
       syncer.updateData(serialisedState)
     }
   }
+
 }
-
-
 
 class MeshController: NSObject {
 
+  #warning("stub")
   private let simplePeer = SimplePeer1.NewSimplePeer1(label: "test-iphone-11-sim")
 
-  var reloadHandler: AnyVoid = { fatalError() }
+  var reloadHandler: AnyVoid = { fatalError("set up yours") }
 
   func broadcastMessage(_ text: String) {
 //    peers.forEach { (peerID) in
@@ -301,7 +292,7 @@ class MeshController: NSObject {
 //        api?.sendToPeer(peerID: peerID, data: data)
 //      }
 //    }
-    fatalError()
+    fatalError("dont use it, yet")
   }
 
   var messages: [BroadMessage] = [.init("Сообщения пока не работают")]
