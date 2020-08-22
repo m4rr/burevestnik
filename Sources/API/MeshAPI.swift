@@ -1,10 +1,10 @@
 import Foundation
 
-//github.com/m4rr/burevestnik/blob/master/jsonrpc.md
-
 typealias NetworkMessage = String
 typealias NetworkID = String
 typealias NetworkTime = TimeInterval
+
+//github.com/m4rr/burevestnik/blob/master/jsonrpc.md
 
 protocol APIFuncs: class {
 
@@ -22,12 +22,12 @@ protocol APICallbacks: class {
   func tick(ts: Date)
   
   /// 2
-  func foundPeer(peerID: String)
+  func foundPeer(peerID: NetworkID)
   /// 3
-  func lostPeer(peerID: String)
+  func lostPeer(peerID: NetworkID)
 
   /// 5
-  func didReceiveFromPeer(peerID: String, data: Data)
+  func didReceiveFromPeer(peerID: NetworkID, data: Data)
 
 }
 
@@ -61,15 +61,15 @@ class APIMan: MeshAPI {
 
   // callbacks
 
-  func foundPeer(peerID: String) {
+  func foundPeer(peerID: NetworkID) {
     meshController.foundPeer(peerID: peerID)
   }
 
-  func lostPeer(peerID: String) {
+  func lostPeer(peerID: NetworkID) {
     meshController.lostPeer(peerID: peerID)
   }
 
-  func didReceiveFromPeer(peerID: String, data: Data) {
+  func didReceiveFromPeer(peerID: NetworkID, data: Data) {
     meshController.didReceiveFromPeer(peerID: peerID, data: data)
   }
 

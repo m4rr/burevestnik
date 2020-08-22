@@ -1,5 +1,13 @@
 import Foundation
 
+struct BroadMessage: Equatable {
+
+  let ti: Date
+  let msg: String
+  let from: String
+
+}
+
 protocol UiHandler {
 
   var reloadHandler: AnyVoid { get set }
