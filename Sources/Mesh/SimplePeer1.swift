@@ -39,8 +39,10 @@ class peerToPeerSyncer {
     self.synced = false
     self.lastAttemptTS = 0
 
-    if let _data = data.data, let state = try? JSONSerialization.jsonObject(with: _data, options: []) as? [NetworkID: peerState] {
+    if let _data = data.data, let state = try? JSONDecoder().decode([NetworkID: peerState].self, from: _data) {
       self.updatePkg.Data = state
+    } else {
+
     }
 
     self.updatePkg.TS = self.lastTickTime
