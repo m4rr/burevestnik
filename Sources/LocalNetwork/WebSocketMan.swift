@@ -5,7 +5,7 @@ protocol NetInvoker {
 }
 
 enum Command: String, Codable {
-  case getTime,
+  case tick,
        foundPeer,
        lostPeer,
        sendToPeer,
@@ -13,7 +13,7 @@ enum Command: String, Codable {
 }
 
 struct Arguments: Codable {
-  let peerID: String?, data: String?, TS: TimeInterval?
+  let PeerID: String?, Data: String?, TS: TimeInterval?
 
   var date: Date? {
     TS.flatMap(Date.init(timeIntervalSince1970:))
@@ -112,11 +112,13 @@ extension WebSocketConn {
 
     // funcs
 
-    case .getTime:
-      self.tick()
+    case .tick:
+      guard let TS = args.TS else { return }
+
+      self.tick(ts: TS)
 
     case .sendToPeer:
-      guard let peerID = args.peerID, let data = args.data?.data else { return }
+      guard let peerID = args.PeerID, let data = args.Data else { return }
 
       self.sendToPeer(peerID: peerID, data: data)
 
@@ -125,17 +127,17 @@ extension WebSocketConn {
     // callbacks
 
     case .foundPeer:
-      guard let peerID = args.peerID, let date = args.date else { return }
+      guard let peerID = args.PeerID else { return }
 
-      api.foundPeer(peerID: peerID, date: date)
+      api.foundPeer(peerID: peerID)
 
     case .lostPeer:
-      guard let peerID = args.peerID, let date = args.date else { return }
+      guard let peerID = args.PeerID else { return }
 
-      api.foundPeer(peerID: peerID, date: date)
+      api.foundPeer(peerID: peerID)
 
     case .didReceiveFromPeer:
-      guard let peerID = args.peerID, let data = args.data?.data else { return }
+      guard let peerID = args.PeerID, let data = args.Data?.data else { return }
 
       api.didReceiveFromPeer(peerID: peerID, data: data)
 
@@ -146,14 +148,19 @@ extension WebSocketConn {
 
 extension WebSocketConn: APIFuncs {
 
-  func tick() {
-    sendToWs(Response(time: Date().timeIntervalSince1970))
+  #warning("stub")
+  func myID() -> NetworkID {
+    "test-iphone-11-sim"
   }
 
-  func sendToPeer(peerID: String, data: Data) {
+  func tick(ts: TimeInterval) {
+    api.tick(ts: Date(timeIntervalSince1970: ts))
+  }
+
+  func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
     sendToWs(Request(Cmd: .sendToPeer,
-                     Args: .init(peerID: peerID,
-                                 data: data.string,
+                     Args: .init(PeerID: peerID,
+                                 Data: data,
                                  TS: nil)))
   }
 

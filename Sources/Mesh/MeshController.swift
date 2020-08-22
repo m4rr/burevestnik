@@ -1,27 +1,21 @@
 import Foundation
 
-enum meshsim {
-  typealias NetworkTime = TimeInterval
-  typealias NetworkID = String
-  typealias NetworkMessage = String
-}
-
 
 struct pkgStateUpdate: Codable {
-  var TS: meshsim.NetworkTime, Data: String
+  var TS: NetworkTime, Data: [NetworkID: peerState] = [:]
 }
 
-struct pkgStateUpdateReceivedAck: Codable {
-  let TS: meshsim.NetworkTime
-}
+//struct pkgStateUpdateReceivedAck: Codable {
+//  let TS: NetworkTime
+//}
 
 struct pkg: Codable {
-  let `Type`: String, Content: String
+  let `Type`: String, Content: pkgStateUpdate
 }
 
 class peerToPeerSyncer {
 
-  internal init(lastAttemptTS: meshsim.NetworkTime, lastTickTime: meshsim.NetworkTime, synced: Bool, delay: meshsim.NetworkTime, sender: @escaping (pkgStateUpdate) -> Void, updatePkg: pkgStateUpdate) {
+  internal init(lastAttemptTS: NetworkTime, lastTickTime: NetworkTime, synced: Bool, delay: NetworkTime, sender: @escaping (pkgStateUpdate) -> Void, updatePkg: pkgStateUpdate) {
     self.lastAttemptTS = lastAttemptTS
     self.lastTickTime = lastTickTime
     self.synced = synced
@@ -31,10 +25,10 @@ class peerToPeerSyncer {
   }
 
   var
-    lastAttemptTS: meshsim.NetworkTime,
-    lastTickTime:  meshsim.NetworkTime,
+    lastAttemptTS: NetworkTime,
+    lastTickTime:  NetworkTime,
     synced:        Bool,
-    delay:         meshsim.NetworkTime,
+    delay:         NetworkTime,
     sender:        (pkgStateUpdate) -> Void,
 
     updatePkg: pkgStateUpdate
@@ -43,14 +37,18 @@ class peerToPeerSyncer {
   func updateData(_ data: String) {
     self.synced = false
     self.lastAttemptTS = 0
-    self.updatePkg.Data = data
+
+    if let _data = data.data, let state = try? JSONSerialization.jsonObject(with: _data, options: []) as? [NetworkID: peerState] {
+      self.updatePkg.Data = state
+    }
+
     self.updatePkg.TS = self.lastTickTime
 
     self.tick(self.lastTickTime)
   }
 
 
-  func tick(_ ts: meshsim.NetworkTime) {
+  func tick(_ ts: NetworkTime) {
     if !self.synced && ts - self.lastAttemptTS >= self.delay {
       self.lastAttemptTS = ts
       self.sender(self.updatePkg)
@@ -58,7 +56,7 @@ class peerToPeerSyncer {
     self.lastTickTime = ts
   }
 
-  func handleAck(ackPkg: pkgStateUpdateReceivedAck) {
+  func handleAck(ackPkg: pkgStateUpdate) {
     if self.synced {
       return
     }
@@ -76,7 +74,7 @@ func newPeerToPeerSyncer(sender: @escaping (pkgStateUpdate) -> Void) -> peerToPe
     synced:        true,
     delay:         30000,
     sender:        sender,
-    updatePkg:     pkgStateUpdate(TS: 0, Data: "")
+    updatePkg:     pkgStateUpdate(TS: 0, Data: [:])
   )
 }
 
@@ -90,47 +88,66 @@ struct PeerUserState: Codable  {
 struct peerState: Codable  {
   let
     UserState: PeerUserState,
-    UpdateTS:  meshsim.NetworkTime
+    UpdateTS:  NetworkTime
 }
 
 // SimplePeer1 provides simplest flood peer strategy
 class SimplePeer1 {
-  internal init(sender: @escaping (meshsim.NetworkID, meshsim.NetworkMessage) -> Void, ID: meshsim.NetworkID, Label: String, syncers: [meshsim.NetworkID : peerToPeerSyncer], meshNetworkState: [meshsim.NetworkID : peerState], currentTS: meshsim.NetworkTime = 0, testStateSet: Bool = false) {
-    self.sender = sender
-    self.ID = ID
-    self.Label = Label
-    self.syncers = syncers
-    self.meshNetworkState = meshNetworkState
-    self.currentTS = currentTS
-    self.testStateSet = testStateSet
+
+  init(label: String, api: APIFuncs, didChangeState: @escaping AnyVoid) {
+
+    self.api = api
+    self.Label = label
+    self.didChangeState = didChangeState
+
+    syncers =          [NetworkID: peerToPeerSyncer]()
+    meshNetworkState = [NetworkID: peerState]()
+
+    currentTS = NetworkTime()
+    testStateSet = false
   }
 
   var
+    api: APIFuncs,
 //      logger  *log.Logger
-    sender:  (_ id: meshsim.NetworkID, _ data: meshsim.NetworkMessage) -> Void,
-    ID:      meshsim.NetworkID,
     Label:   String,
-    syncers: [meshsim.NetworkID: peerToPeerSyncer],
-
-    meshNetworkState: [meshsim.NetworkID: peerState],
-    currentTS:        meshsim.NetworkTime,
-
+    syncers: [NetworkID: peerToPeerSyncer],
+    currentTS:        NetworkTime,
     testStateSet: Bool
 
-  // HandleAppearedPeer implements crowd.MeshActor
-  func HandleAppearedPeer(id: meshsim.NetworkID) {
-    self.syncers[id] = newPeerToPeerSyncer(sender: { (d: pkgStateUpdate) in
-      guard let bt = try? JSONEncoder().encode(d).string else {
-        debugPrint("err.Error()", #function)
-        return
-      }
+  var didChangeState: AnyVoid = { debugPrint("didChangeState non implemented") }
+  var meshNetworkState: [NetworkID: peerState] {
+    didSet {
+      messages = meshNetworkState
+        .map { (key: NetworkID, value: peerState) in
+          BroadMessage(ti: Date(timeIntervalSince1970: value.UpdateTS),
+                       msg: value.UserState.Message,
+                       from: key)
+        }
+    }
+  }
 
-      let p = pkg(Type: "pkgStateUpdate", Content: bt)
+  public var messages: [BroadMessage] = [] {
+    didSet {
+//      assert(Thread.isMainThread)
+      DispatchQueue.main.async(execute: didChangeState)
+    }
+  }
+
+  // HandleAppearedPeer implements crowd.MeshActor
+  func handleAppearedPeer(id: NetworkID) {
+    self.syncers[id] = newPeerToPeerSyncer(sender: { (d: pkgStateUpdate) in
+//      guard let bt = try? JSONEncoder().encode(d).string else {
+//        debugPrint("err.Error()", #function)
+//        return
+//      }
+
+      let p = pkg(Type: "pkgStateUpdate", Content: d)
       guard let bt2 = try? JSONEncoder().encode(p).string else {
         debugPrint("err.Error()", #function)
         return
       }
-      self.sender(id, bt2)
+      self.api.sendToPeer(peerID: id, data: bt2)
     })
 
     if self.meshNetworkState.count > 0 {
@@ -144,16 +161,16 @@ class SimplePeer1 {
   }
 
   // HandleDisappearedPeer implements crowd.MeshActor
-  func HandleDisappearedPeer(id: meshsim.NetworkID) {
+  func handleDisappearedPeer(id: NetworkID) {
     syncers.removeValue(forKey: id)
   }
 
-  func handleNewIncomingState(sourceID: meshsim.NetworkID, update: pkgStateUpdate) {
+  func handleNewIncomingState(sourceID: NetworkID, update: pkgStateUpdate) {
 
     var somethingChanged = false
-    if let _data = update.Data.data, let newNetworkState = try? JSONDecoder().decode([meshsim.NetworkID: peerState].self, from: _data) { // json.Unmarshal
+//    if let _data = update.Data.data, let newNetworkState = try? JSONDecoder().decode([NetworkID: peerState].self, from: _data) { // json.Unmarshal
 
-      for (id, newPeerState) in newNetworkState {
+      for (id, newPeerState) in update.Data {
         if let existingPeerState = self.meshNetworkState[id] {
           if existingPeerState.UpdateTS < newPeerState.UpdateTS {
             somethingChanged = true
@@ -165,10 +182,10 @@ class SimplePeer1 {
         }
       }
 
-    } else {
-      debugPrint("th.logger.Println(err.Error())", #function)
-      return
-    }
+//    } else {
+//      debugPrint("th.logger.Println(err.Error())", #function)
+//      return
+//    }
 
     if somethingChanged {
       guard let serialisedState = try? JSONEncoder().encode(self.meshNetworkState).string else { // json.Marshal
@@ -186,7 +203,7 @@ class SimplePeer1 {
   }
 
   // HandleMessage implements crowd.MeshActor
-  func HandleMessage(id: meshsim.NetworkID, data: meshsim.NetworkMessage) {
+  func handleMessage(id: NetworkID, data: NetworkMessage) {
     guard let _data = data.data, let inpkg = try? JSONDecoder().decode(pkg.self, from: _data) else {
       debugPrint("th.logger.Println(err.Error())", #function)
       return
@@ -195,28 +212,24 @@ class SimplePeer1 {
     switch inpkg.Type {
     case "pkgStateUpdate":
 
-      guard let _data = inpkg.Content.data, let update = try? JSONDecoder().decode(pkgStateUpdate.self, from: _data) else {
-        debugPrint("case pkgStateUpdate - (err.Error())", #function)
-        return
-      }
+      let update = inpkg.Content
 
       self.handleNewIncomingState(sourceID: id, update: update)
 
-      let ack = pkgStateUpdateReceivedAck(TS: update.TS)
+      let ack = pkgStateUpdate(TS: update.TS, Data: [:])
 
-      guard let ser = try? JSONEncoder().encode(ack).string,
-            let bt2 = try? JSONEncoder().encode(pkg(Type: "pkgStateUpdateReceivedAck", Content: ser)).string else {
+      guard let bt2 = try? JSONEncoder().encode(pkg(Type: "pkgStateUpdateReceivedAck", Content: ack)).string else {
         debugPrint("th.logger.Println(err.Error())")
         return
      }
 
-      self.sender(id, bt2)
+      self.api.sendToPeer(peerID: id, data: bt2)
 
     case "pkgStateUpdateReceivedAck":
       if let p = self.syncers[id] {
-        if let _data = inpkg.Content.data, let ack = try? JSONDecoder().decode(pkgStateUpdateReceivedAck.self, from: _data) {
-          p.handleAck(ackPkg: ack)
-        }
+
+          p.handleAck(ackPkg: inpkg.Content)
+
       }
 
     default:
@@ -224,13 +237,8 @@ class SimplePeer1 {
     }
   }
 
-  // RegisterMessageSender implements crowd.MeshActor
-  func RegisterMessageSender(handler: @escaping (_ id: meshsim.NetworkID, _ data: meshsim.NetworkMessage) -> Void) {
-    self.sender = handler
-  }
-
   // HandleTimeTick implements crowd.MeshActor
-  func HandleTimeTick(ts: meshsim.NetworkTime) {
+  func handleTimeTick(ts: NetworkTime) {
     self.currentTS = ts
     for (_, s) in self.syncers {
       s.tick(ts)
@@ -238,34 +246,28 @@ class SimplePeer1 {
 
     if !self.testStateSet {
       self.testStateSet = true
-      self.SetState(p: PeerUserState(Coordinates: [], Message: String.init(format: "Fuu from %@", self.Label)))
+      self.SetState(p: PeerUserState(Coordinates: [0,0],
+                                     Message: String(format: "Fuu from %@", self.Label)))
     }
   }
 
-  // DebugData implements crowd.MeshActor
-  func DebugData() -> [meshsim.NetworkID: peerState] {
-    return meshNetworkState
-  }
+//  // DebugData implements crowd.MeshActor
+//  func DebugData() -> [NetworkID: peerState] {
+//    return meshNetworkState
+//  }
 
-  // NewSimplePeer1 returns new SimplePeer1
-  class func NewSimplePeer1(label: String) -> SimplePeer1 {
-    return SimplePeer1(
-      //      logger:           logger,
-      sender:            { _, _ in debugPrint("Not registered") },
-      ID:               "",
-      Label:            label,
-      syncers:          [meshsim.NetworkID: peerToPeerSyncer](),
-      meshNetworkState: [meshsim.NetworkID: peerState]()
-    )
-  }
+//  // NewSimplePeer1 returns new SimplePeer1
+//  class func NewSimplePeer1(label: String, api: APIFuncs) -> SimplePeer1 {
+//    see SimplePeer1.init
+//  }
+
 
   // SetState updates this peer user data
   func SetState(p: PeerUserState) {
-    self.meshNetworkState[self.ID] = peerState(
+    self.meshNetworkState[self.api.myID()] = peerState(
       UserState: p,
       UpdateTS:  self.currentTS
     )
-
 
     guard let serialisedState = try? JSONEncoder().encode(self.meshNetworkState).string else {
       debugPrint("th.logger.Println(err.Error())")
@@ -279,54 +281,73 @@ class SimplePeer1 {
 
 }
 
-class MeshController: NSObject {
 
-  #warning("stub")
-  private let simplePeer = SimplePeer1.NewSimplePeer1(label: "test-iphone-11-sim")
+protocol UiHandler {
 
-  var reloadHandler: AnyVoid = { fatalError("set up yours") }
+  var reloadHandler: AnyVoid { get set }
+  func sendMessage(_ text: String)
 
-  func broadcastMessage(_ text: String) {
-//    peers.forEach { (peerID) in
-//      if let data = text.data {
-//        api?.sendToPeer(peerID: peerID, data: data)
-//      }
-//    }
-    fatalError("dont use it, yet")
+}
+
+protocol UiProvider {
+
+  var dataCount: Int { get }
+  func dataAt(_ indexPath: IndexPath) -> BroadMessage
+
+}
+
+class MeshController: NSObject, UiHandler {
+
+  weak var api: APIFuncs!
+
+  private lazy var simplePeer = SimplePeer1(label: "iphone-test", api: api, didChangeState: reloadHandler)
+
+  // MARK: - UiHandler
+
+  var reloadHandler: AnyVoid = { debugPrint("reloadHandler not set up") }
+
+  func sendMessage(_ text: String) {
+    simplePeer.SetState(p: PeerUserState(Coordinates: [0,0], Message: text))
   }
 
-  var messages: [BroadMessage] = [.init("Сообщения пока не работают")]
-//  var peers = [String]()
+}
 
-  weak var api: APIFuncs?
+// MARK: - UiProvider
 
-//  func notifySomeone() {
-//    api?.sendToPeer(peerID: "", data: Data())
-//    #warning("stub")
-//  }
+extension MeshController: UiProvider {
+
+  private var mess: [BroadMessage] {
+    simplePeer.messages
+  }
+
+  func dataAt(_ indexPath: IndexPath) -> BroadMessage {
+    mess[indexPath.row]
+  }
+
+  var dataCount: Int {
+    mess.count
+  }
 
 }
 
 extension MeshController: APICallbacks {
-  
+
   func tick(ts: Date) {
-    // do something if needed
-    
-    simplePeer.HandleTimeTick(ts: ts.timeIntervalSince1970)
+    simplePeer.handleTimeTick(ts: ts.timeIntervalSince1970)
   }
 
-  func foundPeer(peerID: String, date: Date) {
-    simplePeer.HandleAppearedPeer(id: peerID)
+  func foundPeer(peerID: String) {
+    simplePeer.handleAppearedPeer(id: peerID)
   }
 
-  func lostPeer(peerID: String, date: Date) {
-    simplePeer.HandleDisappearedPeer(id: peerID)
+  func lostPeer(peerID: String) {
+    simplePeer.handleDisappearedPeer(id: peerID)
   }
 
   func didReceiveFromPeer(peerID: String, data: Data) {
 //    reloadHandler()
     if let str = data.string {
-      simplePeer.HandleMessage(id: peerID, data: str)
+      simplePeer.handleMessage(id: peerID, data: str)
     }
   }
 

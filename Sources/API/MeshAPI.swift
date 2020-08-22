@@ -22,9 +22,9 @@ protocol APICallbacks: class {
   func tick(ts: Date)
   
   /// 2
-  func foundPeer(peerID: String, date: Date)
+  func foundPeer(peerID: String)
   /// 3
-  func lostPeer(peerID: String, date: Date)
+  func lostPeer(peerID: String)
 
   /// 5
   func didReceiveFromPeer(peerID: String, data: Data)
@@ -61,12 +61,12 @@ class APIMan: MeshAPI {
 
   // callbacks
 
-  func foundPeer(peerID: String, date: Date) {
-    meshController.foundPeer(peerID: peerID, date: date)
+  func foundPeer(peerID: String) {
+    meshController.foundPeer(peerID: peerID)
   }
 
-  func lostPeer(peerID: String, date: Date) {
-    meshController.lostPeer(peerID: peerID, date: date)
+  func lostPeer(peerID: String) {
+    meshController.lostPeer(peerID: peerID)
   }
 
   func didReceiveFromPeer(peerID: String, data: Data) {

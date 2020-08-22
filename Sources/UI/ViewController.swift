@@ -1,19 +1,12 @@
 import UIKit
 
-protocol UiHandler: UITableViewDataSource, UITableViewDelegate {
-
-  var reloadHandler: AnyVoid { get set }
-  func broadcastMessage(_ text: String)
-
-}
-
 class ViewController: UIViewController {
 
   lazy var reach = Reachability.forInternetConnection()
 
-  var uiHandler: UiHandler? {
+  var uiHandler: (UiHandler & UiProvider)! {
     didSet {
-      uiHandler?.reloadHandler = reloadUI
+      uiHandler.reloadHandler = reloadUI
     }
   }
 
@@ -75,8 +68,8 @@ class ViewController: UIViewController {
 
     title = "🤍❤️🤍"
 
-    tableView.dataSource = uiHandler
-    tableView.delegate = uiHandler
+    tableView.dataSource = self
+    tableView.delegate = self
     
     setupMapWrapperView()
 
@@ -119,7 +112,7 @@ class ViewController: UIViewController {
 
     alert.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak alert] _ in
       if let text = alert?.textFields?.first?.text {
-        self.uiHandler?.broadcastMessage(text)
+        self.uiHandler?.sendMessage(text)
       }
     }))
 
@@ -130,27 +123,17 @@ class ViewController: UIViewController {
 
 }
 
-extension MeshController: UiHandler {
-
-  func dataAt(_ indexPath: IndexPath) -> BroadMessage {
-    #warning("stub")
-    return messages[indexPath.row]
-  }
-
-  var dataCount: Int {
-    #warning("stub")
-    return messages.count
-  }
+extension ViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    dataCount
+    uiHandler.dataCount
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-    let data = dataAt(indexPath)
+    let data = uiHandler.dataAt(indexPath)
     cell.t1?.text = data.msg
     cell.t2?.text = data.ti.description
 

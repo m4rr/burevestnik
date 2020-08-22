@@ -4,10 +4,11 @@ struct BroadMessage: Equatable {
 
   let ti: Date
   let msg: String
+  let from: String
 
-  init(_ msg: String, _ ti: Date = Date()) {
-    self.ti = ti
-    self.msg = msg
-  }
+//  init(_ msg: String, _ ti: Date = Date()) {
+//    self.ti = ti
+//    self.msg = msg
+//  }
 
 }

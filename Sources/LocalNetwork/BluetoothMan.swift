@@ -5,7 +5,7 @@ private let kMCSessionServiceType = "burevestnik"
 
 class BtMan: NSObject {
   
-  var api: API! {
+  var api: MeshAPI! {
     didSet {
       localPeerID = MCPeerID(displayName: UIDevice.current.name)
       //    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
@@ -60,10 +60,10 @@ extension BtMan: MCSessionDelegate {
 
     switch state {
     case .connected:
-      api.foundPeer(peerID: peerID.displayName, date: Date())
+      api.foundPeer(peerID: peerID.displayName)
 
     case .notConnected:
-      api.lostPeer(peerID: peerID.displayName, date: Date())
+      api.lostPeer(peerID: peerID.displayName)
 
     default:
       ()
@@ -135,9 +135,13 @@ extension BtMan {
 
 extension BtMan: APIFuncs {
 
-  func sendToPeer(peerID: String, data: Data) {
-    guard let s = data.string else { return }
-    sessionSend(to: peerID, data: s)
+  func myID() -> NetworkID {
+    UIDevice.current.name
+  }
+
+  func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
+//    guard let data = data.string else { return }
+    sessionSend(to: peerID, data: data)
   }
 
 }
