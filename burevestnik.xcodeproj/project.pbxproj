@@ -19,6 +19,7 @@
 		036E937824E3EA9C001DA125 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 036E937724E3EA9C001DA125 /* Main.storyboard */; };
 		0383B09C24ED5F830098E91F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0383B09B24ED5F830098E91F /* Reachability.m */; };
 		0383B09F24ED60570098E91F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0383B09E24ED60570098E91F /* SystemConfiguration.framework */; };
+		038F195324F1605700DF48DD /* SimplePeer1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038F195224F1605700DF48DD /* SimplePeer1.swift */; };
 		03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BluetoothMan.swift */; };
 		03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE438124E44158000D82B7 /* BroadMessage.swift */; };
 		03D7236924E6D05F003B3211 /* MeshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D7236824E6D05F003B3211 /* MeshController.swift */; };
@@ -43,6 +44,7 @@
 		0383B09A24ED5F830098E91F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		0383B09B24ED5F830098E91F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		0383B09E24ED60570098E91F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		038F195224F1605700DF48DD /* SimplePeer1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePeer1.swift; sourceTree = "<group>"; };
 		03AE437F24E44127000D82B7 /* BluetoothMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothMan.swift; sourceTree = "<group>"; };
 		03AE438124E44158000D82B7 /* BroadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadMessage.swift; sourceTree = "<group>"; };
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				03D7236824E6D05F003B3211 /* MeshController.swift */,
+				038F195224F1605700DF48DD /* SimplePeer1.swift */,
 				03AE438124E44158000D82B7 /* BroadMessage.swift */,
 			);
 			path = Mesh;
@@ -250,6 +253,7 @@
 				0367608924E719B900556EFA /* Extensions.swift in Sources */,
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
 				03AE438224E44158000D82B7 /* BroadMessage.swift in Sources */,
+				038F195324F1605700DF48DD /* SimplePeer1.swift in Sources */,
 				03527B2224E6B05B00E9C6DB /* MeshAPI.swift in Sources */,
 				032BCFE324ED923A00543B66 /* Views.swift in Sources */,
 				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
