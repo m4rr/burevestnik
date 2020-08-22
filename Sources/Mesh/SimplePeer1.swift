@@ -1,5 +1,13 @@
 import Foundation
 
+struct BroadMessage: Equatable {
+
+  let ti: Date
+  let msg: String
+  let from: String
+
+}
+
 struct pkgStateUpdate: Codable {
   var TS: NetworkTime, Data: [NetworkID: peerState] = [:]
 }
