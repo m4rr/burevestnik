@@ -7,7 +7,7 @@ class BtMan: NSObject {
   
   var api: MeshAPI! {
     didSet {
-      localPeerID = MCPeerID(displayName: UIDevice.current.name)
+      localPeerID = MCPeerID(displayName: selfDeviceName)
       //    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
 
       session = MCSession(peer: localPeerID)
@@ -30,9 +30,9 @@ class BtMan: NSObject {
   }
 
   func triggerAdvertiseBroadcasting() {
-    if advertiser != nil {
-      advertiser.stopAdvertisingPeer()
-    }
+
+    // cancel if not nil
+    advertiser?.stopAdvertisingPeer()
 
     advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: nil, serviceType: kMCSessionServiceType)
     advertiser.delegate = self
@@ -41,16 +41,15 @@ class BtMan: NSObject {
   }
 
   @objc func triggerDiscoveryBrowsing() {
-    if browser != nil {
-      browser.stopBrowsingForPeers()
-    }
+
+    // cancel if not nil
+    browser?.stopBrowsingForPeers()
 
     browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: kMCSessionServiceType)
     browser.delegate = self
 
     browser.startBrowsingForPeers()
   }
-
 }
 
 extension BtMan: MCSessionDelegate {
@@ -87,13 +86,12 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
 //    debugPrint(#function, resourceName, peerID, localURL)
   }
-
 }
 
 extension BtMan: MCNearbyServiceBrowserDelegate {
 
   func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-    debugPrint(#function, peerID, info)
+    debugPrint(#function, peerID, info ?? "<no info>")
 
     if peerID.displayName == self.localPeerID.displayName {
       return
@@ -111,7 +109,6 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
   func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
     debugPrint(#function, peerID)
   }
-
 }
 
 extension BtMan: MCNearbyServiceAdvertiserDelegate {
@@ -130,18 +127,15 @@ extension BtMan {
                         with: .reliable)
     }
   }
-
 }
 
 extension BtMan: APIFuncs {
 
   func myID() -> NetworkID {
-    UIDevice.current.name
+    selfDeviceName
   }
 
   func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
-//    guard let data = data.string else { return }
     sessionSend(to: peerID, data: data)
   }
-
 }

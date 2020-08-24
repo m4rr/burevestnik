@@ -69,7 +69,7 @@ extension LocationMan: CLLocationManagerDelegate {
   }
 
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-    debugPrint(error.localizedDescription, (error as? CLError)?.code)
+    debugPrint(error.localizedDescription, (error as? CLError)?.code ?? "<no err>")
   }
 
 }
