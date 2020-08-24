@@ -149,7 +149,7 @@ extension WebSocketConn {
 extension WebSocketConn: APIFuncs {
 
   func myID() -> NetworkID {
-    selfDeviceName
+    kThisDeviceName
   }
 
   func tick(ts: TimeInterval) {

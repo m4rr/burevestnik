@@ -132,7 +132,7 @@ extension BtMan {
 extension BtMan: APIFuncs {
 
   func myID() -> NetworkID {
-    selfDeviceName
+    kThisDeviceName
   }
 
   func sendToPeer(peerID: NetworkID, data: NetworkMessage) {

@@ -29,6 +29,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-var selfDeviceName: String {
-  UIDevice.current.name
-}
+let kThisDeviceName = UIDevice.current.name
