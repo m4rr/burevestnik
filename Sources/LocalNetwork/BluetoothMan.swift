@@ -7,7 +7,7 @@ class BtMan: NSObject {
   
   var api: MeshAPI! {
     didSet {
-      localPeerID = MCPeerID(displayName: selfDeviceName)
+
       //    NSKeyedArchiver(requiringSecureCoding: false).encode(localPeerID, forKey: "root")
 
       session = MCSession(peer: localPeerID)
@@ -17,12 +17,12 @@ class BtMan: NSObject {
     }
   }
 
-  private var localPeerID: MCPeerID!
+  private let localPeerID: MCPeerID = MCPeerID(displayName: kThisDeviceName)
   private var browser: MCNearbyServiceBrowser!
   private var advertiser: MCNearbyServiceAdvertiser!
   private var session: MCSession!
 
-  var pollTimer: Timer?
+//  var pollTimer: Timer?
 
   func startStopBrowseAdvertise() {
     triggerAdvertiseBroadcasting()
@@ -55,7 +55,7 @@ class BtMan: NSObject {
 extension BtMan: MCSessionDelegate {
 
   func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-    debugPrint(#function, state)
+    debugPrint(#function, peerID, state.rawValue)
 
     switch state {
     case .connected:
@@ -72,7 +72,15 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
     debugPrint(#function, data, peerID)
 
-    api.didReceiveFromPeer(peerID: peerID.displayName, data: data)
+    if session.connectedPeers.contains(peerID) {
+      api.didReceiveFromPeer(peerID: peerID.displayName, data: data)
+
+    } else {
+      session.connectPeer(peerID, withNearbyConnectionData: data)
+
+    }
+
+
   }
 
   func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -86,6 +94,14 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {
 //    debugPrint(#function, resourceName, peerID, localURL)
   }
+
+  func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
+    debugPrint(#function, peerID, certificate)
+
+    if certificate != nil {
+      certificateHandler(true)
+    }
+  }
 }
 
 extension BtMan: MCNearbyServiceBrowserDelegate {
@@ -93,13 +109,20 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
   func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
     debugPrint(#function, peerID, info ?? "<no info>")
 
+
+
     if peerID.displayName == self.localPeerID.displayName {
       return
     }
 
     session.nearbyConnectionData(forPeer: peerID) { (data, error) in
       if let data = data {
-        self.session.connectPeer(peerID, withNearbyConnectionData: data)
+        do {
+          try self.session.send(data, toPeers: [peerID], with: .reliable)
+        } catch let e {
+          debugPrint(e)
+        }
+//        self.session.connectPeer(peerID, withNearbyConnectionData: data)
       } else if let error = error {
         debugPrint(error)
       }
@@ -122,6 +145,7 @@ extension BtMan {
 
   func sessionSend(to peerID: String, data str: String) {
     if let data = str.data(using: .utf8) {
+      #warning("Do not attempt to construct a peer ID object for a nonlocal peer")
       try? session.send(data,
                         toPeers: [MCPeerID(displayName: peerID)],
                         with: .reliable)
