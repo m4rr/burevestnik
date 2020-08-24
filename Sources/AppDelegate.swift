@@ -28,3 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
 }
+
+var selfDeviceName: String {
+  UIDevice.current.name
+}

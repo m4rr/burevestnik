@@ -148,9 +148,8 @@ extension WebSocketConn {
 
 extension WebSocketConn: APIFuncs {
 
-  #warning("stub")
   func myID() -> NetworkID {
-    "test-iphone-11-sim"
+    selfDeviceName
   }
 
   func tick(ts: TimeInterval) {
