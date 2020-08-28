@@ -1,5 +1,6 @@
 import UIKit
 import MapKit
+import CoreLocation
 
 private let proximityDistance = CLLocationDistance(500)
 
@@ -10,9 +11,13 @@ class Cell: UITableViewCell {
 
 }
 
-class MapWrapperView: UIView {
+class MapWrapperView: UIView, MKMapViewDelegate {
 
-  @IBOutlet private weak var mapView: MKMapView!
+  @IBOutlet private weak var mapView: MKMapView! {
+    didSet {
+      mapView.delegate = self
+    }
+  }
 
   func update(with loc: CLLocation?) {
     if let loc = loc?.coordinate {

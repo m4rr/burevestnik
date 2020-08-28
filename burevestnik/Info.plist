@@ -30,6 +30,7 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_burevestnik._tcp</string>
+		<string>_burevestnik._udp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Самое главное: локальная сеть используется для общения без интернета.</string>
