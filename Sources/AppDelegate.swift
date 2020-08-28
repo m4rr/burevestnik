@@ -1,5 +1,8 @@
 import UIKit
 
+// keep the name unless the app is alive
+let kThisDeviceName = UIDevice.current.name
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -28,6 +31,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
 }
-
-// keep the name unless the app is alive
-let kThisDeviceName = UIDevice.current.name
