@@ -4,9 +4,9 @@ class ViewController: UIViewController {
 
   lazy var reach = Reachability.forInternetConnection()
 
-  var uiHandler: (UiHandler & UiProvider)! {
+  weak var uiHandler: (UiHandler & UiProvider)? {
     didSet {
-      uiHandler.reloadHandler = reloadUI
+      uiHandler?.reloadHandler = reloadUI
     }
   }
 
@@ -126,16 +126,17 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    uiHandler.dataCount
+    uiHandler?.dataCount ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-    let data = uiHandler.dataAt(indexPath)
-    cell.t1?.text = data.msg
-    cell.t2?.text = data.ti.description
+    if let data = uiHandler?.dataAt(indexPath) {
+      cell.t1?.text = data.msg
+      cell.t2?.text = data.ti.description
+    }
 
     return cell
   }
