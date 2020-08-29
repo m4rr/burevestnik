@@ -5,25 +5,25 @@ private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
   
-  var api: MeshAPI! {
+  var api: APICallbacks! {
     didSet {
-      startStopBrowseAdvertise()
+      startSession()
     }
   }
 
   private let localPeerID: MCPeerID = MCPeerID(displayName: kThisDeviceName)
 
-  private var session: MCSession!
+  private lazy var session: MCSession! = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .none)
   private var browser: MCNearbyServiceBrowser!
   private var advertiser: MCNearbyServiceAdvertiser!
 
   private var peers: [NetworkID: MCPeerID] = [:]
 
-  func startStopBrowseAdvertise() {
-    session = MCSession(peer: localPeerID)
+  private func startSession() {
+    session.delegate = self
 
-    triggerAdvertiseBroadcasting()
-    triggerDiscoveryBrowsing()
+    startAdvertising()
+    startBrowsing()
   }
 
   func archivePeerID(_ pid: MCPeerID) -> Data? {
@@ -34,27 +34,38 @@ class BtMan: NSObject {
     try? NSKeyedUnarchiver.unarchivedObject(ofClass: MCPeerID.self, from: pid)
   }
 
-  func triggerAdvertiseBroadcasting() {
+  private func stopAdvertising() {
 
     // cancel if not nil
     advertiser?.stopAdvertisingPeer()
+  }
 
-    advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: nil, serviceType: kMCSessionService)
-    advertiser.delegate = self
+  private func startAdvertising() {
+
+    if advertiser == nil {
+      advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: ["me": localPeerID.displayName], serviceType: kMCSessionService)
+      advertiser.delegate = self
+    }
 
     advertiser.startAdvertisingPeer()
   }
 
-  @objc func triggerDiscoveryBrowsing() {
+  private func stopDiscoveryBrowsing() {
 
     // cancel if not nil
     browser?.stopBrowsingForPeers()
+  }
 
-    browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: kMCSessionService)
-    browser.delegate = self
+  private func startBrowsing() {
+
+    if browser == nil {
+      browser = MCNearbyServiceBrowser(peer: localPeerID, serviceType: kMCSessionService)
+      browser.delegate = self
+    }
 
     browser.startBrowsingForPeers()
   }
+
 }
 
 extension BtMan: MCSessionDelegate {
@@ -64,10 +75,12 @@ extension BtMan: MCSessionDelegate {
 
     switch state {
     case .connected:
+      peers[peerID.displayName] = peerID
       api.foundPeer(peerID: peerID.displayName)
 
     case .notConnected:
       api.lostPeer(peerID: peerID.displayName)
+      peers[peerID.displayName] = nil
 
     default:
       ()
@@ -92,11 +105,11 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, resourceName, peerID, localURL ?? "---")
   }
 
-//  func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
-//    debugPrint(#function, peerID, certificate ?? "<no certificate>")
-//
-//    if certificate != nil { certificateHandler(true) }
-//  }
+  func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
+    debugPrint(#function, peerID, certificate ?? "<no certificate>")
+
+    certificateHandler(true)
+  }
 }
 
 extension BtMan: MCNearbyServiceBrowserDelegate {
@@ -108,7 +121,7 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
       return
     }
 
-    browser.invitePeer(peerID, to: session, withContext: nil, timeout: 5)
+    browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
   }
 
   func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -119,28 +132,35 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
 extension BtMan: MCNearbyServiceAdvertiserDelegate {
 
   func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
+    debugPrint(context?.debugDescription ?? "--no invite data")
+
     invitationHandler(true, session)
+
+//    stopAdvertising()
   }
 }
 
 extension BtMan {
 
   func sessionSend(to peerID: String, data str: String) {
-    if let data = str.data, let toPeer = peers[peerID] { // Do not attempt to construct
-      try? session.send(data,                            // a peer ID object
-                        toPeers: [toPeer],               // for a nonlocal peer
-                        with: .reliable)
+    // Do not attempt to construct a peer ID object for a nonlocal peer
+    guard let data = str.data, let toPeer = peers[peerID] else {
+      return debugPrint("no---err")
+    }
+
+    do {
+      try session.send(data, toPeers: [toPeer], with: .reliable)
+    } catch let err {
+      debugPrint(err)
     }
   }
+
 }
 
 extension BtMan: APIFuncs {
 
-  func myID() -> NetworkID {
-    kThisDeviceName
-  }
-
   func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
     sessionSend(to: peerID, data: data)
   }
+
 }
