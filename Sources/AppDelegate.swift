@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    let local = WebSocketConn(wss: wssURL)
     let local = BtMan()
 
+//    let l2 = SimplePeerJS()
+
     apiMan = APIMan(meshController: mesh, localNetwork: local)
     mesh.api = apiMan
     local.api = apiMan

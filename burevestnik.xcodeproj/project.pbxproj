@@ -21,6 +21,8 @@
 		0383B09F24ED60570098E91F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0383B09E24ED60570098E91F /* SystemConfiguration.framework */; };
 		038F195324F1605700DF48DD /* SimplePeer1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038F195224F1605700DF48DD /* SimplePeer1.swift */; };
 		03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BluetoothMan.swift */; };
+		03BE7B6B24F9C3D900CBE53C /* SimplePeerJSProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BE7B6A24F9C3D900CBE53C /* SimplePeerJSProxy.swift */; };
+		03BE7B6D24F9C3FD00CBE53C /* local_peer_model.js in Resources */ = {isa = PBXBuildFile; fileRef = 03BE7B6C24F9C3FD00CBE53C /* local_peer_model.js */; };
 		03D7236924E6D05F003B3211 /* MeshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D7236824E6D05F003B3211 /* MeshController.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +47,8 @@
 		0383B09E24ED60570098E91F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		038F195224F1605700DF48DD /* SimplePeer1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePeer1.swift; sourceTree = "<group>"; };
 		03AE437F24E44127000D82B7 /* BluetoothMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothMan.swift; sourceTree = "<group>"; };
+		03BE7B6A24F9C3D900CBE53C /* SimplePeerJSProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimplePeerJSProxy.swift; sourceTree = "<group>"; };
+		03BE7B6C24F9C3FD00CBE53C /* local_peer_model.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = local_peer_model.js; sourceTree = "<group>"; };
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
 		03C8656C24E44D4000FAC1B5 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		03D7236824E6D05F003B3211 /* MeshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshController.swift; sourceTree = "<group>"; };
@@ -90,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				03527B1F24E6AE5A00E9C6DB /* README.md */,
+				03BE7B6C24F9C3FD00CBE53C /* local_peer_model.js */,
 				0367608A24E72B9F00556EFA /* Sources */,
 				036E936224E3E00D001DA125 /* burevestnik */,
 				036E936124E3E00D001DA125 /* Products */,
@@ -158,6 +163,7 @@
 			children = (
 				03D7236824E6D05F003B3211 /* MeshController.swift */,
 				038F195224F1605700DF48DD /* SimplePeer1.swift */,
+				03BE7B6A24F9C3D900CBE53C /* SimplePeerJSProxy.swift */,
 			);
 			path = Mesh;
 			sourceTree = "<group>";
@@ -230,6 +236,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03BE7B6D24F9C3FD00CBE53C /* local_peer_model.js in Resources */,
 				0341A24D24E58A9F001C8005 /* LaunchScreen.storyboard in Resources */,
 				036E936D24E3E013001DA125 /* Assets.xcassets in Resources */,
 				036E937824E3EA9C001DA125 /* Main.storyboard in Resources */,
@@ -254,6 +261,7 @@
 				032BCFE324ED923A00543B66 /* Views.swift in Sources */,
 				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
 				03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */,
+				03BE7B6B24F9C3D900CBE53C /* SimplePeerJSProxy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
