@@ -9,9 +9,9 @@ class SimplePeerJS {
     if let url = Bundle.main.url(forResource: "local_peer_model", withExtension: "js"),
        let data = try? Data(contentsOf: url).string {
 
-      let ret = ctx.evaluateScript(data)
+      let result = ctx.evaluateScript(data)
 
-      debugPrint(ret)
+      debugPrint(result ?? "--no js value returned")
     }
   }
 

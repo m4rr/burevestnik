@@ -264,7 +264,6 @@ class SimplePeer1 {
 //    see SimplePeer1.init
 //  }
 
-
   // SetState updates this peer user data
   func SetState(p: PeerUserState) {
     self.meshNetworkState[self.api.myID()] = peerState(

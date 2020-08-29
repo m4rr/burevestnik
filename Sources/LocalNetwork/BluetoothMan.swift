@@ -4,7 +4,8 @@ import MultipeerConnectivity
 private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
-  
+
+  /// Starts multipeer session when assigned.
   var api: APICallbacks! {
     didSet {
       startSession()
