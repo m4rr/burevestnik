@@ -52,14 +52,23 @@ class APIMan: MeshAPI {
   var meshController: APICallbacks
   var localNetwork: APIFuncs
 
+  private let started = Date()
+  private lazy var timer =  Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+    self?.tick(ts: -(self?.started.timeIntervalSinceNow ?? 0))
+  }
+
   init(meshController: APICallbacks, localNetwork: APIFuncs) {
     self.meshController = meshController
     self.localNetwork = localNetwork
+
+    if self.localNetwork is BtMan {
+      _ = self.timer.debugDescription
+    }
   }
 
   // funcs
 
-  func tick(ts: NetworkTime) {
+  @objc func tick(ts: NetworkTime) {
     meshController.tick(ts: ts)
   }
 

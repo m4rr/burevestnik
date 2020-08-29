@@ -52,7 +52,6 @@ class peerToPeerSyncer {
 
 
   func tick(_ ts: NetworkTime) {
-    #warning("who's ticking???")
     if !self.synced && (ts - self.lastAttemptTS) >= self.delay {
       self.lastAttemptTS = ts
       self.sender(self.updatePkg)
