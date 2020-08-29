@@ -107,8 +107,8 @@ class SimplePeer1 {
     syncers =          [NetworkID: peerToPeerSyncer]()
     meshNetworkState = [NetworkID: peerState]()
 
-    currentTS = NetworkTime()
-    testStateSet = false
+//    currentTS = 0
+    nextSendTime = 0
   }
 
   var
@@ -118,6 +118,12 @@ class SimplePeer1 {
   syncers: [NetworkID: peerToPeerSyncer],
 
   nextSendTime: NetworkTime
+
+  let started = Date()
+
+  var currentTS: NetworkTime {
+    return -started.timeIntervalSinceNow
+  }
 
   var didChangeState: AnyVoid = { debugPrint("didChangeState non implemented") }
   var meshNetworkState: [NetworkID: peerState] {
