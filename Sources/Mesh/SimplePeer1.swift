@@ -107,7 +107,7 @@ class SimplePeer1 {
     syncers =          [NetworkID: peerToPeerSyncer]()
     meshNetworkState = [NetworkID: peerState]()
 
-//    currentTS = 0
+    currentTS = 0
     nextSendTime = 0
   }
 
@@ -117,13 +117,8 @@ class SimplePeer1 {
   Label:   String,
   syncers: [NetworkID: peerToPeerSyncer],
 
+  currentTS: NetworkTime,
   nextSendTime: NetworkTime
-
-  let started = Date()
-
-  var currentTS: NetworkTime {
-    return -started.timeIntervalSinceNow
-  }
 
   var didChangeState: AnyVoid = { debugPrint("didChangeState non implemented") }
   var meshNetworkState: [NetworkID: peerState] {
@@ -249,7 +244,7 @@ class SimplePeer1 {
 
   // HandleTimeTick implements crowd.MeshActor
   func handleTimeTick(ts: NetworkTime) {
-//    self.currentTS = ts
+    self.currentTS = ts
     for (_, s) in self.syncers {
       s.tick(ts)
     }
