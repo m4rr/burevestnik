@@ -2,13 +2,13 @@ import Foundation
 
 struct BroadMessage: Equatable {
 
-  let ti: Date
+  let ti: Double
   let msg: String
   let from: String
 
 }
 
-protocol UiHandler {
+protocol UiHandler: class {
 
   var reloadHandler: AnyVoid { get set }
   func sendMessage(_ text: String)
@@ -58,8 +58,8 @@ extension MeshController: UiProvider {
 
 extension MeshController: APICallbacks {
 
-  func tick(ts: Date) {
-    simplePeer.handleTimeTick(ts: ts.timeIntervalSince1970)
+  func tick(ts: TimeInterval) {
+    simplePeer.handleTimeTick(ts: ts)
   }
 
   func foundPeer(peerID: String) {

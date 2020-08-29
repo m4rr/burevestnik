@@ -14,10 +14,6 @@ enum Command: String, Codable {
 
 struct Arguments: Codable {
   let PeerID: String?, Data: String?, TS: TimeInterval?
-
-  var date: Date? {
-    TS.flatMap(Date.init(timeIntervalSince1970:))
-  }
 }
 
 class WebSocketConn {
@@ -148,12 +144,8 @@ extension WebSocketConn {
 
 extension WebSocketConn: APIFuncs {
 
-  func myID() -> NetworkID {
-    kThisDeviceName
-  }
-
   func tick(ts: TimeInterval) {
-    api.tick(ts: Date(timeIntervalSince1970: ts))
+    api.tick(ts: ts)
   }
 
   func sendToPeer(peerID: NetworkID, data: NetworkMessage) {

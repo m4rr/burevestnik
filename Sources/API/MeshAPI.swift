@@ -16,10 +16,18 @@ protocol APIFuncs: class {
 
 }
 
+extension APIFuncs {
+
+  func myID() -> NetworkID {
+    kThisDeviceName
+  }
+
+}
+
 protocol APICallbacks: class {
 
   /// 1
-  func tick(ts: Date)
+  func tick(ts: NetworkTime)
   
   /// 2
   func foundPeer(peerID: NetworkID)
@@ -51,7 +59,7 @@ class APIMan: MeshAPI {
 
   // funcs
 
-  func tick(ts: Date) {
+  func tick(ts: NetworkTime) {
     meshController.tick(ts: ts)
   }
 

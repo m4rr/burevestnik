@@ -97,6 +97,7 @@ struct peerState: Codable  {
 // SimplePeer1 provides simplest flood peer strategy
 class SimplePeer1 {
 
+
   init(label: String, api: APIFuncs, didChangeState: @escaping AnyVoid) {
 
     self.api = api
@@ -111,19 +112,19 @@ class SimplePeer1 {
   }
 
   var
-    api: APIFuncs,
-//      logger  *log.Logger
-    Label:   String,
-    syncers: [NetworkID: peerToPeerSyncer],
-    currentTS:        NetworkTime,
-    testStateSet: Bool
+  api: APIFuncs,
+  //      logger  *log.Logger
+  Label:   String,
+  syncers: [NetworkID: peerToPeerSyncer],
+
+  nextSendTime: NetworkTime
 
   var didChangeState: AnyVoid = { debugPrint("didChangeState non implemented") }
   var meshNetworkState: [NetworkID: peerState] {
     didSet {
       messages = meshNetworkState
         .map { (key: NetworkID, value: peerState) in
-          BroadMessage(ti: Date(timeIntervalSince1970: value.UpdateTS),
+          BroadMessage(ti: value.UpdateTS,
                        msg: value.UserState.Message,
                        from: key)
         }
