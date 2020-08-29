@@ -26,7 +26,7 @@ class MeshController: NSObject, UiHandler {
 
   weak var api: APIFuncs!
 
-  private lazy var simplePeer = SimplePeer1(label: "iphone-test", api: api, didChangeState: reloadHandler)
+  private lazy var simplePeer = SimplePeer1(label: kThisDeviceName, api: api, didChangeState: reloadHandler)
 
   // MARK: - UiHandler
 
