@@ -16,7 +16,7 @@ struct pkg: Codable {
 
 class peerToPeerSyncer {
 
-  internal init(lastAttemptTS: NetworkTime, lastTickTime: NetworkTime, synced: Bool, delay: NetworkTime, sender: @escaping (pkgStateUpdate) -> Void, updatePkg: pkgStateUpdate) {
+  private init(lastAttemptTS: NetworkTime, lastTickTime: NetworkTime, synced: Bool, delay: NetworkTime, sender: @escaping (pkgStateUpdate) -> Void, updatePkg: pkgStateUpdate) {
     self.lastAttemptTS = lastAttemptTS
     self.lastTickTime = lastTickTime
     self.synced = synced
@@ -52,7 +52,8 @@ class peerToPeerSyncer {
 
 
   func tick(_ ts: NetworkTime) {
-    if !self.synced && ts - self.lastAttemptTS >= self.delay {
+    #warning("who's ticking???")
+    if !self.synced && (ts - self.lastAttemptTS) >= self.delay {
       self.lastAttemptTS = ts
       self.sender(self.updatePkg)
     }
@@ -68,17 +69,16 @@ class peerToPeerSyncer {
     }
   }
 
-}
-
-func newPeerToPeerSyncer(sender: @escaping (pkgStateUpdate) -> Void) -> peerToPeerSyncer {
-  return peerToPeerSyncer(
-    lastAttemptTS: 0,
-    lastTickTime:  0,
-    synced:        true,
-    delay:         30000,
-    sender:        sender,
-    updatePkg:     pkgStateUpdate(TS: 0, Data: [:])
-  )
+  static func newPeerToPeerSyncer(sender: @escaping (pkgStateUpdate) -> Void) -> peerToPeerSyncer {
+    return peerToPeerSyncer(
+      lastAttemptTS: 0,
+      lastTickTime:  0,
+      synced:        true,
+      delay:         3,
+      sender:        sender,
+      updatePkg:     pkgStateUpdate(TS: 0, Data: [:])
+    )
+  }
 }
 
 // PeerUserState contains user data
@@ -140,7 +140,7 @@ class SimplePeer1 {
 
   // HandleAppearedPeer implements crowd.MeshActor
   func handleAppearedPeer(id: NetworkID) {
-    self.syncers[id] = newPeerToPeerSyncer(sender: { (d: pkgStateUpdate) in
+    self.syncers[id] = peerToPeerSyncer.newPeerToPeerSyncer(sender: { (d: pkgStateUpdate) in
 //      guard let bt = try? JSONEncoder().encode(d).string else {
 //        debugPrint("err.Error()", #function)
 //        return
@@ -243,15 +243,14 @@ class SimplePeer1 {
 
   // HandleTimeTick implements crowd.MeshActor
   func handleTimeTick(ts: NetworkTime) {
-    self.currentTS = ts
+//    self.currentTS = ts
     for (_, s) in self.syncers {
       s.tick(ts)
     }
 
-    if !self.testStateSet {
-      self.testStateSet = true
-      self.SetState(p: PeerUserState(Coordinates: [0,0],
-                                     Message: String(format: "Fuu from %@", self.Label)))
+    if self.currentTS > self.nextSendTime {
+      self.nextSendTime = self.currentTS + NetworkTime(1 + .random(in: 0...5))
+      self.SetState(p: PeerUserState(Coordinates: [0,0], Message: "\(Label) says \(currentTS/1000)"))
     }
   }
 
