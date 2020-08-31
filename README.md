@@ -12,7 +12,7 @@ Download: [Release 1.0-alpha](https://github.com/m4rr/burevestnik/releases/tag/v
 
 ## [WIP] Beta
 
-Truly offline chat via Bluetooth.
+Truly offline chat via Multipeer Connectivity.
 
 Would be smarter and would have much more optimal routes to deliver messages.
 
