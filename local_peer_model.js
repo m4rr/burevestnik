@@ -200,6 +200,7 @@ class SimplePeer1 {
         }
     }
     // SetState updates this peer user data
+    isendmessage(text) { this.SetState(new PeerUserState(text)); }
     SetState(p) {
         this.meshNetworkState[this.api.myID()] = new peerState(p, this.currentTS);
         this.sendDbgData();
@@ -217,4 +218,3 @@ let simplePeerInstance;
 function letsgo(label, api) {
     simplePeerInstance = new SimplePeer1(label, api);
 }
-//# sourceMappingURL=local_peer_model.js.map

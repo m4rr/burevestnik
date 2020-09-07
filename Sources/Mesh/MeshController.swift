@@ -26,14 +26,15 @@ class MeshController: NSObject, UiHandler {
 
   weak var api: APIFuncs!
 
-  private lazy var simplePeer = SimplePeerJS(api: api) // SimplePeer1(label: kThisDeviceName, api: api, didChangeState: reloadHandler)
+  private lazy var simplePeer = SimplePeerJS(api: api, didChangeState: reloadHandler)
 
   // MARK: - UiHandler
 
   var reloadHandler: AnyVoid = { debugPrint("reloadHandler not set up") }
 
   func sendMessage(_ text: String) {
-    simplePeer.SetState(p: PeerUserState(Coordinates: [0,0], Message: text))
+    simplePeer.isendmessage(text: text)
+//    simplePeer.SetState(p: PeerUserState(Coordinates: [0,0], Message: text))
   }
 
 }
