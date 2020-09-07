@@ -80,6 +80,7 @@ class SimplePeer1 {
         // })
     }
     // HandleAppearedPeer implements crowd.MeshActor
+    foundPeer(peerID) { this.handleAppearedPeer(peerID); }
     handleAppearedPeer(id) {
         this.syncers[id] = new peerToPeerSyncer((d) => {
             let bt = JSON.stringify(d);
@@ -104,6 +105,7 @@ class SimplePeer1 {
             this.syncers[id].updateData(serialisedState);
         }
     }
+    lostPeer(peerID) { this.handleDisappearedPeer(peerID); }
     handleDisappearedPeer(id) {
         delete this.syncers[id];
     }
@@ -153,6 +155,7 @@ class SimplePeer1 {
             }
         }
     }
+    didReceiveFromPeer(peerID, data) { this.handleMessage(peerID, data); }
     handleMessage(id, data) {
         // let inpkg = new pkg()
         let inpkg = JSON.parse(data); // Unmarshal
@@ -184,6 +187,7 @@ class SimplePeer1 {
                 break;
         }
     }
+    tick(ts) { this.handleTimeTick(ts); }
     handleTimeTick(ts) {
         this.currentTS = ts;
         for (let key in this.syncers) {

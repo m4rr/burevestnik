@@ -26,7 +26,7 @@ class MeshController: NSObject, UiHandler {
 
   weak var api: APIFuncs!
 
-  private lazy var simplePeer = SimplePeer1(label: kThisDeviceName, api: api, didChangeState: reloadHandler)
+  private lazy var simplePeer = SimplePeerJS(api: api) // SimplePeer1(label: kThisDeviceName, api: api, didChangeState: reloadHandler)
 
   // MARK: - UiHandler
 
@@ -59,21 +59,21 @@ extension MeshController: UiProvider {
 extension MeshController: APICallbacks {
 
   func tick(ts: TimeInterval) {
-    simplePeer.handleTimeTick(ts: ts)
+    simplePeer.tick(ts: ts)
   }
 
   func foundPeer(peerID: String) {
-    simplePeer.handleAppearedPeer(id: peerID)
+    simplePeer.foundPeer(peerID: peerID)
   }
 
   func lostPeer(peerID: String) {
-    simplePeer.handleDisappearedPeer(id: peerID)
+    simplePeer.lostPeer(peerID: peerID)
   }
 
   func didReceiveFromPeer(peerID: String, data: NetworkMessage) {
 //    reloadHandler()
 //    if let str = data.string {
-      simplePeer.handleMessage(id: peerID, data: data)
+    simplePeer.didReceiveFromPeer(peerID: peerID, data: data)
 //    }
   }
 
