@@ -91,7 +91,11 @@ extension BtMan: MCSessionDelegate {
   func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
     debugPrint(#function, data, peerID)
 
-    api.didReceiveFromPeer(peerID: peerID.displayName, data: data)
+    if let str = data.string {
+      api.didReceiveFromPeer(peerID: peerID.displayName, data: str)
+    } else {
+      assertionFailure("no data")
+    }
   }
 
   func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {

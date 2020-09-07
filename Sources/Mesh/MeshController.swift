@@ -70,11 +70,11 @@ extension MeshController: APICallbacks {
     simplePeer.handleDisappearedPeer(id: peerID)
   }
 
-  func didReceiveFromPeer(peerID: String, data: Data) {
+  func didReceiveFromPeer(peerID: String, data: NetworkMessage) {
 //    reloadHandler()
-    if let str = data.string {
-      simplePeer.handleMessage(id: peerID, data: str)
-    }
+//    if let str = data.string {
+      simplePeer.handleMessage(id: peerID, data: data)
+//    }
   }
 
 }

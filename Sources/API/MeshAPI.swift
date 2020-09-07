@@ -35,7 +35,7 @@ protocol APICallbacks: class {
   func lostPeer(peerID: NetworkID)
 
   /// 5
-  func didReceiveFromPeer(peerID: NetworkID, data: Data)
+  func didReceiveFromPeer(peerID: NetworkID, data: NetworkMessage)
 
 }
 
@@ -86,7 +86,7 @@ class APIMan: MeshAPI {
     meshController.lostPeer(peerID: peerID)
   }
 
-  func didReceiveFromPeer(peerID: NetworkID, data: Data) {
+  func didReceiveFromPeer(peerID: NetworkID, data: NetworkMessage) {
     meshController.didReceiveFromPeer(peerID: peerID, data: data)
   }
 

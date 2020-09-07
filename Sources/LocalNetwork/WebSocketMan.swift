@@ -133,7 +133,9 @@ extension WebSocketConn {
       api.foundPeer(peerID: peerID)
 
     case .didReceiveFromPeer:
-      guard let peerID = args.PeerID, let data = args.Data?.data else { return }
+      guard let peerID = args.PeerID, let data = args.Data?.data?.string else {
+        return
+      }
 
       api.didReceiveFromPeer(peerID: peerID, data: data)
 
