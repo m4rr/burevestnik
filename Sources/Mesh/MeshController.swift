@@ -26,7 +26,7 @@ class MeshController: NSObject, UiHandler {
 
   weak var api: APIFuncs!
 
-  private lazy var simplePeer = SimplePeerJS(api: api, didChangeState: reloadHandler)
+  private lazy var simplePeer = SimplePeerJS(api: api)
 
   // MARK: - UiHandler
 
@@ -35,6 +35,8 @@ class MeshController: NSObject, UiHandler {
   func sendMessage(_ text: String) {
     simplePeer.isendmessage(text: text)
 //    simplePeer.SetState(p: PeerUserState(Coordinates: [0,0], Message: text))
+
+    reloadHandler()
   }
 
 }
@@ -75,6 +77,8 @@ extension MeshController: APICallbacks {
 //    reloadHandler()
 //    if let str = data.string {
     simplePeer.didReceiveFromPeer(peerID: peerID, data: data)
+
+    reloadHandler()
 //    }
   }
 

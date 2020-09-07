@@ -52,10 +52,10 @@ class APIMan: NSObject, MeshAPI {
   var meshController: APICallbacks
   var localNetwork: APIFuncs
 
-//  private let started = Date()
-//  private lazy var timer =  Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-//    self?.tick(ts: -(self?.started.timeIntervalSinceNow ?? 0))
-//  }
+  private let started = Date()
+  private lazy var timer =  Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+    self?.tick(ts: -(self?.started.timeIntervalSinceNow ?? 0))
+  }
 
   init(meshController: APICallbacks, localNetwork: APIFuncs) {
 
@@ -64,9 +64,9 @@ class APIMan: NSObject, MeshAPI {
 
     super.init()
 
-//    if self.localNetwork is BtMan {
-//      _ = self.timer.debugDescription
-//    }
+    if self.localNetwork is BtMan {
+      _ = self.timer.debugDescription
+    }
   }
 
   // funcs
