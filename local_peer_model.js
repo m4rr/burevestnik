@@ -94,7 +94,8 @@ class SimplePeer1 {
                 console.log("err.Error()");
                 return;
             }
-            this.api.sendToPeer(id, bt2);
+            // this.api.sendToPeer(id, bt2)
+            self.sendToPeer(id, bt2);
         });
         if (Object.keys(this.meshNetworkState).length > 0) {
             let serialisedState = JSON.stringify(this.meshNetworkState);
@@ -200,9 +201,8 @@ class SimplePeer1 {
         }
     }
     // SetState updates this peer user data
-    isendmessage(text) { this.SetState(new PeerUserState(text)); }
     SetState(p) {
-        this.meshNetworkState[this.api.myID()] = new peerState(p, this.currentTS);
+        this.meshNetworkState[this.Label] = new peerState(p, this.currentTS);
         this.sendDbgData();
         let serialisedState = this.meshNetworkState;
         for (let key in this.syncers) {
@@ -219,6 +219,7 @@ function letsgo(label, api) {
     simplePeerInstance = new SimplePeer1(label, api);
     return simplePeerInstance;
 }
+// --
 function tick(ts) {
     if (!!simplePeerInstance) {
         simplePeerInstance.handleTimeTick(ts);
@@ -226,12 +227,21 @@ function tick(ts) {
     }
     return "tick can't find simplePeerInstance ";
 }
-function didReceiveFromPeer(peerID, data) {
-    simplePeerInstance.handleMessage(peerID, data);
-}
 function foundPeer(peerID) {
     simplePeerInstance.handleAppearedPeer(peerID);
 }
 function lostPeer(peerID) {
     simplePeerInstance.handleDisappearedPeer(peerID);
+}
+function didReceiveFromPeer(peerID, data) {
+    simplePeerInstance.handleMessage(peerID, data);
+}
+function isendmessage(text) {
+    simplePeerInstance.SetState(new PeerUserState(text));
+}
+function meshNetworkState() {
+    if (!!simplePeerInstance) {
+        return simplePeerInstance.meshNetworkState;
+    }
+    return "global can't find simplePeerInstance.meshNetworkState ";
 }
