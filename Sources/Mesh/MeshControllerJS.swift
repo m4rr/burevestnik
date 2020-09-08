@@ -10,7 +10,7 @@ public class MeshControllerJS: UiHandler {
   }
 
   deinit {
-    //
+    debugPrint("MeshControllerJS deinit")
   }
 
   private lazy var meshAPI = MeshAPI()
@@ -58,24 +58,13 @@ public class MeshControllerJS: UiHandler {
     return nil
   }
 
-
   // MARK: - UiHandler
 
   var reloadHandler: AnyVoid = { debugPrint("reloadHandler not set up") }
 
   func sendMessage(_ text: String) {
 
-//    let res =
-//    context
-//      .objectForKeyedSubscript("handleUserData")?
-//      .call(withArguments: )
-
-
-//    debugPrint("handleUserData", res)
-
     meshAPI.userDataUpdateHandler(data: text)
-
-
 
     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
       self.reloadHandler()
