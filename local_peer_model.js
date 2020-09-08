@@ -83,6 +83,7 @@ class SimplePeer1 {
     foundPeer(peerID) { this.handleAppearedPeer(peerID); }
     handleAppearedPeer(id) {
         this.syncers[id] = new peerToPeerSyncer((d) => {
+            throw new Error("handleAppearedPeer peerToPeerSyncer ooookkk");
             let bt = JSON.stringify(d);
             if (bt == null) {
                 console.log("err.Error()");
@@ -95,7 +96,7 @@ class SimplePeer1 {
                 return;
             }
             // this.api.sendToPeer(id, bt2)
-            self.sendToPeer(id, bt2);
+            sendToPeer(id, bt2);
         });
         if (Object.keys(this.meshNetworkState).length > 0) {
             let serialisedState = JSON.stringify(this.meshNetworkState);
@@ -177,7 +178,8 @@ class SimplePeer1 {
                     console.log("err.Error()");
                     return;
                 }
-                this.api.sendToPeer(id, bt2);
+                // this.api.sendToPeer(id, bt2)
+                sendToPeer(id, bt2);
                 break;
             case "pkgStateUpdateReceivedAck":
                 let p2 = this.syncers[id];
@@ -244,4 +246,7 @@ function meshNetworkState() {
         return simplePeerInstance.meshNetworkState;
     }
     return "global can't find simplePeerInstance.meshNetworkState ";
+}
+function sendToPeer(a1, a2) {
+    throw new Error("not implemented sendToPeer");
 }

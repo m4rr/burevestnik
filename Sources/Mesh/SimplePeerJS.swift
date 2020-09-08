@@ -37,7 +37,7 @@ class SimplePeerJS {
       debugPrint(result ?? "--no js value returned")
 
       context.exceptionHandler = { ctx, value in
-        debugPrint(#function, ctx, value?.toString())
+        debugPrint(ctx, value?.toString())
 
       }
 
@@ -65,14 +65,7 @@ class SimplePeerJS {
         .toDictionary() {
 
       return meshNetworkState
-        .map({ key, val in
-          return BroadMessage(ti: val as? , msg: <#T##String#>, from: (key as? String) ?? "no key")
-        })
-        .map { (key: NetworkID, value: peerState) in
-          BroadMessage(ti: value.UpdateTS,
-                       msg: value.UserState.Message,
-                       from: key)
-      }
+        .map(BroadMessage.from)
     }
 
 //    assertionFailure("'no meshNetworkState")
@@ -127,9 +120,26 @@ extension SimplePeerJS: APICallbacks {
 
 }
 
-extension APIFuncs where Self: JSExport {
+extension APIMan: JSExport {
 
-
-
+  func GetMyID() -> NetworkID {
+    myID()
+  }
+//  func RegisterPeerAppearedHandler(fn: (NetworkID) -> Void) {
+//    
+//  }
+//  func RegisterPeerDisappearedHandler(fn: (id: NetworkID) -> Void) {
+//
+//  }
+//  func RegisterMessageHandler(fn: (id: NetworkID, data: NetworkMessage) -> Void) {
+//
+//  }
+//  func SendMessage(id: NetworkID, data: NetworkMessage) {
+//
+//  }
+//  func RegisterTimeTickHandler(fn: (ts: NetworkTime) -> Void) {
+//
+//  }
+//  func SendDebugData(interface{})
 
 }
