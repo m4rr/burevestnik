@@ -266,7 +266,7 @@ struct peerState: Codable  {
 //
 //  // SetState updates this peer user data
 //  func SetState(p: PeerUserState) {
-//    self.meshNetworkState[self.api.myID()] = peerState(
+//    self.meshNetworkState[self.api.GetMyID()] = peerState(
 //      UserState: p,
 //      UpdateTS:  self.currentTS
 //    )

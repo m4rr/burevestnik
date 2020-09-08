@@ -31,7 +31,7 @@ class WebSocketConn {
     let time: TimeInterval?
   }
 
-  weak var api: APICallbacks! {
+  weak var api: MeshAPI! {
     didSet {
       connect()
     }
@@ -42,6 +42,10 @@ class WebSocketConn {
 
   init(wss: URL) {
     self.wssURL = wss
+  }
+
+  convenience init() {
+    self.init(wss: URL(string: "ws://burevestnik.means.live:8887/ws_rpc?lat=53.904153&lon=27.556925")!)
   }
 
   func connect() {
@@ -111,12 +115,12 @@ extension WebSocketConn {
     case .tick:
       guard let TS = args.TS else { return }
 
-      self.tick(ts: TS)
+      api.TimeTickHandler(TS)
 
     case .sendToPeer:
       guard let peerID = args.PeerID, let data = args.Data else { return }
 
-      self.sendToPeer(peerID: peerID, data: data)
+      self.SendMessage(peerID: peerID, data: data)
 
     //      sessionSend(to: peerID, data: data)
 
@@ -125,19 +129,19 @@ extension WebSocketConn {
     case .foundPeer:
       guard let peerID = args.PeerID else { return }
 
-      api.foundPeer(peerID: peerID)
+      api.PeerAppearedHandler(peerID)
 
     case .lostPeer:
       guard let peerID = args.PeerID else { return }
 
-      api.foundPeer(peerID: peerID)
+      api.PeerDisappearedHandler(peerID)
 
     case .didReceiveFromPeer:
       guard let peerID = args.PeerID, let data = args.Data?.data?.string else {
         return
       }
 
-      api.didReceiveFromPeer(peerID: peerID, data: data)
+      api.MessageHandler(peerID, data)
 
     }
   }
@@ -146,11 +150,11 @@ extension WebSocketConn {
 
 extension WebSocketConn: APIFuncs {
 
-  func tick(ts: TimeInterval) {
-    api.tick(ts: ts)
+  func GetMyID() -> NetworkID {
+    kThisDeviceName + "-WS"
   }
 
-  func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
+  func SendMessage(peerID: NetworkID, data: NetworkMessage) {
     sendToWs(Request(Cmd: .sendToPeer,
                      Args: .init(PeerID: peerID,
                                  Data: data,

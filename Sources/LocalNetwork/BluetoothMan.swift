@@ -5,11 +5,25 @@ private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
 
+  private let started = Date()
+  private lazy var timer = Timer
+    .scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+      if let ts = self?.started.timeIntervalSinceNow {
+        self?.meshAPI.TimeTickHandler(-ts)
+      }
+    }
+
   /// Starts multipeer session when assigned.
-  var api: APICallbacks! {
+  weak var meshAPI: MeshAPI! {
     didSet {
       startSession()
+
+      _ = timer.description
     }
+  }
+
+  init(meshAPI: MeshAPI) {
+    self.meshAPI = meshAPI
   }
 
   private let localPeerID: MCPeerID = MCPeerID(displayName: kThisDeviceName)
@@ -77,10 +91,10 @@ extension BtMan: MCSessionDelegate {
     switch state {
     case .connected:
       peers[peerID.displayName] = peerID
-      api.foundPeer(peerID: peerID.displayName)
+      meshAPI.PeerAppearedHandler(peerID.displayName)
 
     case .notConnected:
-      api.lostPeer(peerID: peerID.displayName)
+      meshAPI.PeerDisappearedHandler(peerID.displayName)
       peers[peerID.displayName] = nil
 
     default:
@@ -92,7 +106,7 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, data, peerID)
 
     if let str = data.string {
-      api.didReceiveFromPeer(peerID: peerID.displayName, data: str)
+      meshAPI.MessageHandler(peerID.displayName, str)
     } else {
       assertionFailure("no data")
     }
@@ -164,7 +178,11 @@ extension BtMan {
 
 extension BtMan: APIFuncs {
 
-  func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
+  func GetMyID() -> NetworkID {
+    kThisDeviceName
+  }
+
+  func SendMessage(peerID: NetworkID, data: NetworkMessage) {
     sessionSend(to: peerID, data: data)
   }
 

@@ -6,7 +6,7 @@ class ViewController: UIViewController {
 
   weak var uiHandler: (UiHandler & UiProvider)? {
     didSet {
-      uiHandler?.reloadHandler = reloadUI
+      uiHandler?.reloadHandler = reloadTableView
     }
   }
 
@@ -18,7 +18,7 @@ class ViewController: UIViewController {
   @IBOutlet weak var peersButton: UIBarButtonItem!
   @IBOutlet weak var wwanButton: UIBarButtonItem!
 
-  func reloadUI() {
+  func reloadTableView() {
     tableView.reloadData()
   }
 

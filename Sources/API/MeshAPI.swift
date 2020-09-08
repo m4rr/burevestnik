@@ -1,4 +1,5 @@
 import Foundation
+import JavaScriptCore
 
 typealias NetworkMessage = String
 typealias NetworkID = String
@@ -9,88 +10,95 @@ typealias NetworkTime = TimeInterval
 protocol APIFuncs: class {
 
   /// 0
-  func myID() -> NetworkID
+  func GetMyID() -> NetworkID
 
   /// 4
-  func sendToPeer(peerID: NetworkID, data: NetworkMessage)
-
-}
-
-extension APIFuncs {
-
-  func myID() -> NetworkID {
-    kThisDeviceName
-  }
+  func SendMessage(peerID: NetworkID, data: NetworkMessage)
 
 }
 
 protocol APICallbacks: class {
 
   /// 1
-  func tick(ts: NetworkTime)
-  
+  func RegisterTimeTickHandler(fn: @escaping (NetworkTime) -> Void)
+
   /// 2
-  func foundPeer(peerID: NetworkID)
+  func RegisterPeerAppearedHandler(fn: @escaping (NetworkID) -> Void)
   /// 3
-  func lostPeer(peerID: NetworkID)
+  func RegisterPeerDisappearedHandler(fn: @escaping (NetworkID) -> Void)
 
   /// 5
-  func didReceiveFromPeer(peerID: NetworkID, data: NetworkMessage)
+  func RegisterMessageHandler(fn: @escaping (NetworkID, NetworkMessage) -> Void)
+
+  func registerUserDataUpdateHandler(fn: @escaping () -> Void)
 
 }
 
-protocol MeshAPI: APIFuncs & APICallbacks {
-  //
+protocol MeshAPIProtocol: APIFuncs & APICallbacks, JSExport {
+
 }
 
-class APIMan: NSObject, MeshAPI {
+class MeshAPI: NSObject, MeshAPIProtocol {
 
-  func myID() -> NetworkID {
-    localNetwork.myID()
-  }
+  var localNetwork: APIFuncs!
 
-  var meshController: APICallbacks
-  var localNetwork: APIFuncs
-
-  private let started = Date()
-  private lazy var timer =  Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-    self?.tick(ts: -(self?.started.timeIntervalSinceNow ?? 0))
-  }
-
-  init(meshController: APICallbacks, localNetwork: APIFuncs) {
-
-    self.meshController = meshController
-    self.localNetwork = localNetwork
-
+  override init() {
     super.init()
 
-    if self.localNetwork is BtMan {
-      _ = self.timer.debugDescription
-    }
+    self.localNetwork = BtMan(meshAPI: self) // WebSocketConn()
   }
 
   // funcs
 
-  @objc func tick(ts: NetworkTime) {
-    meshController.tick(ts: ts)
-  }
-
-  func sendToPeer(peerID: NetworkID, data: NetworkMessage) {
-    localNetwork.sendToPeer(peerID: peerID, data: data)
+  func SendMessage(peerID: NetworkID, data: NetworkMessage) {
+    localNetwork.SendMessage(peerID: peerID, data: data)
   }
 
   // callbacks
 
-  func foundPeer(peerID: NetworkID) {
-    meshController.foundPeer(peerID: peerID)
+  private(set) var PeerAppearedHandler: (NetworkID) -> Void = { _ in
+    debugPrint("PeerAppearedHandler not imp") }
+
+  private(set) var PeerDisappearedHandler: (NetworkID) -> Void = { _ in
+    debugPrint("PeerDisappearedHandler not imp") }
+
+  private(set) var MessageHandler: (NetworkID, NetworkMessage) -> Void = { _,_ in
+    debugPrint("MessageHandler not imp") }
+
+  private(set) var TimeTickHandler: (NetworkTime) -> Void = { _ in
+    debugPrint("TimeTickHandler not imp") }
+
+  private(set) var UserDataUpdateHandler: () -> Void = {
+    debugPrint("UserDataUpdateHandler not imp") }
+
+  func RegisterPeerAppearedHandler(fn: @escaping (NetworkID) -> Void) {
+    PeerAppearedHandler = fn
   }
 
-  func lostPeer(peerID: NetworkID) {
-    meshController.lostPeer(peerID: peerID)
+  func RegisterPeerDisappearedHandler(fn: @escaping (NetworkID) -> Void) {
+    PeerDisappearedHandler = fn
   }
 
-  func didReceiveFromPeer(peerID: NetworkID, data: NetworkMessage) {
-    meshController.didReceiveFromPeer(peerID: peerID, data: data)
+  func RegisterMessageHandler(fn: @escaping (NetworkID, NetworkMessage) -> Void) {
+    MessageHandler = fn
+  }
+
+  func SendMessage(id: NetworkID, data: NetworkMessage) {
+    localNetwork.SendMessage(peerID: id, data: data)
+  }
+
+  func RegisterTimeTickHandler(fn: @escaping (NetworkTime) -> Void) {
+    TimeTickHandler = fn
+  }
+
+  func registerUserDataUpdateHandler(fn: @escaping () -> Void) {
+    UserDataUpdateHandler = fn
+  }
+
+//  func SendDebugData(interface{})
+
+  func GetMyID() -> NetworkID {
+    localNetwork.GetMyID()
   }
 
 }
