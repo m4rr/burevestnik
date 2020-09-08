@@ -1,8 +1,7 @@
 import Foundation
 import JavaScriptCore
 
-public
-class MeshControllerJS {
+public class MeshControllerJS: UiHandler {
 
   private let context = JSContext()!
 
@@ -10,7 +9,11 @@ class MeshControllerJS {
     runJS()
   }
 
-//  private lazy var api = MeshAPI()
+  deinit {
+    //
+  }
+
+  private lazy var meshAPI = MeshAPI()
 
   private func runJS() {
 
@@ -18,32 +21,29 @@ class MeshControllerJS {
       return
     }
 
-//    let block: @convention(block) (CVaListPointer) -> Void = { vaList in
-//      debugPrint(vaList)
-//    }
     let logger: @convention(block) (String, String) -> Void = { s1, s2 in
-      debugPrint(s1,s2)
+      debugPrint(s1, s2 == "undefined" ? "" : s2)
     }
+    context.setObject(
+      unsafeBitCast(logger, to: AnyObject.self),
+      forKeyedSubscript: "log" as NSString)
 
-    context.setObject(logger, forKeyedSubscript: "log" as NSString)
+    context.setObject(
+      unsafeBitCast(meshAPI, to: AnyObject.self),
+      forKeyedSubscript: "api" as NSString)
 
-//    context.setObject(api, forKeyedSubscript: "api" as NSString)
-    context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
-
-
-//    let getMyID: @convention(block) () -> String = { () -> String in
-//      return "kekekekek"
-//    }
-//    context.setObject(getMyID, forKeyedSubscript: "api.getMyID" as (NSCopying & NSObjectProtocol))
-
+//    context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
 
     context.exceptionHandler = { ctx, value in
       debugPrint(ctx ?? "js exception no ctx",
                  value?.toString() ?? "js exception no value")
     }
 
-    let result = context.evaluateScript(script)
-    debugPrint("evaluateScript result - ", result ?? "no result")
+    if let result = context.evaluateScript(script) {
+      debugPrint("evaluateScript result - ", result)
+    } else {
+      assertionFailure()
+    }
   }
 
   private var jsURL: URL? {
@@ -58,4 +58,54 @@ class MeshControllerJS {
     return nil
   }
 
+
+  // MARK: - UiHandler
+
+  var reloadHandler: AnyVoid = { debugPrint("reloadHandler not set up") }
+
+  func sendMessage(_ text: String) {
+
+//    let res =
+//    context
+//      .objectForKeyedSubscript("handleUserData")?
+//      .call(withArguments: )
+
+
+//    debugPrint("handleUserData", res)
+
+    meshAPI.userDataUpdateHandler(data: text)
+
+
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+      self.reloadHandler()
+    }
+  }
+
 }
+
+// MARK: - UiProvider
+
+extension MeshControllerJS: UiProvider {
+
+  private var mess: [BroadMessage] {
+    let msgs = context
+      .objectForKeyedSubscript("meshNetworkState" as NSString)?
+      .call(withArguments: [])
+
+
+    debugPrint("msgs", msgs, msgs?.toDictionary())
+
+    return []
+  }
+
+  func dataAt(_ indexPath: IndexPath) -> BroadMessage {
+    mess[indexPath.row]
+  }
+
+  var dataCount: Int {
+    mess.count
+  }
+
+}
+

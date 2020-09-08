@@ -1,9 +1,9 @@
 import Foundation
 
-class MeshAPI: NSObject, MeshAPIProtocol {
+class MeshAPI: NSObject, MeshAPIExports {
 
-  static func getInstance() -> MeshAPI {
-   return MeshAPI()
+  class func getInstance() -> MeshAPI {
+    return MeshAPI()
   }
 
   var localNetwork: LocalNetwork!
@@ -16,53 +16,63 @@ class MeshAPI: NSObject, MeshAPIProtocol {
 
   // funcs
 
-  public func getMyID() -> NetworkID {
+  func getMyID() -> NetworkID {
     localNetwork.getMyID()
   }
 
-  public func sendMessage(peerID: NetworkID, data: NetworkMessage) {
+  func sendMessage(_ peerID: NetworkID, _ data: NetworkMessage) {
     localNetwork.sendMessage(peerID: peerID, data: data)
+  }
+
+  func registerPeerAppearedHandler(_ f: JSValue) {
+    _peerAppearedHandler = f
+  }
+
+  func registerPeerDisappearedHandler(_ f: JSValue) {
+    _peerDisappearedHandler = f
+  }
+
+  func registerMessageHandler(_ f: JSValue) {
+    _messageHandler = f
+  }
+
+  func registerTimeTickHandler(_ f: JSValue) {
+    _timeTickHandler = f
+  }
+
+  func registerUserDataUpdateHandler(_ f: JSValue) {
+    _userDataUpdateHandler = f
+  }
+
+  func setDebugMessage(_ json: String) {
+    debugPrint(json)
   }
 
   // storage
 
-  private(set) var peerAppearedHandler: (NetworkID) -> Void = { _ in
-    debugPrint("PeerAppearedHandler not imp") }
-
-  private(set) var peerDisappearedHandler: (NetworkID) -> Void = { _ in
-    debugPrint("PeerDisappearedHandler not imp") }
-
-  private(set) var messageHandler: (NetworkID, NetworkMessage) -> Void = { _,_ in
-    debugPrint("MessageHandler not imp") }
-
-  private(set) var timeTickHandler: (NetworkTime) -> Void = { _ in
-    debugPrint("TimeTickHandler not imp") }
-
-  private(set) var userDataUpdateHandler: () -> Void = {
-    debugPrint("UserDataUpdateHandler not imp") }
-
-  // callbacks
-
-  public func registerPeerAppearedHandler(fn: @escaping (NetworkID) -> Void) {
-    peerAppearedHandler = fn
+  private var _peerAppearedHandler: JSValue!
+  func peerAppearedHandler(_ id: NetworkID) -> Void {
+    _peerAppearedHandler.call(withArguments: [id])
   }
 
-  public func registerPeerDisappearedHandler(fn: @escaping (NetworkID) -> Void) {
-    peerDisappearedHandler = fn
+  private var _peerDisappearedHandler: JSValue!
+  func peerDisappearedHandler(_ id: NetworkID) -> Void {
+    _peerDisappearedHandler.call(withArguments: [id])
   }
 
-  public func registerMessageHandler(fn: @escaping (NetworkID, NetworkMessage) -> Void) {
-    messageHandler = fn
+  private var _messageHandler: JSValue!
+  func messageHandler(_ id: NetworkID, _ data: NetworkMessage) {
+    _messageHandler.call(withArguments: [id, data])
   }
 
-  public func registerTimeTickHandler(fn: @escaping (NetworkTime) -> Void) {
-    timeTickHandler = fn
+  private var _timeTickHandler: JSValue!
+  func timeTickHandler(_ ts: NetworkTime) {
+    _timeTickHandler.call(withArguments: [ts])
   }
 
-  public func registerUserDataUpdateHandler(fn: @escaping () -> Void) {
-    userDataUpdateHandler = fn
+  private var _userDataUpdateHandler: JSValue!
+  func userDataUpdateHandler(data: NetworkMessage) {
+    _userDataUpdateHandler.call(withArguments: ["{Message: \(data)}"])
   }
-
-//  func SendDebugData(interface{})
 
 }

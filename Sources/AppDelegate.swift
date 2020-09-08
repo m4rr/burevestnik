@@ -17,10 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let nc = window?.rootViewController as? UINavigationController
     let vc = (nc?.topViewController ?? window?.rootViewController) as? ViewController
 
-    // FIXME
-//    vc?.uiHandler = meshCon
-
-    _ = meshCon
+    vc?.uiHandler = meshCon
     
     return true
   }

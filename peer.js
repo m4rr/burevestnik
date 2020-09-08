@@ -1,10 +1,14 @@
 log('started');
-let api;
+
 try {
-  api = new MeshAPI();
+  if (!!api) {
+    log(api)
+  } else {
+    var api = new MeshAPI();
+  }
 }
 catch(e){
-  api = MeshAPI.getInstance();
+  var api = MeshAPI.getInstance();
 }
 var myId = api.getMyID();
 log('my ID:', myId);
@@ -158,3 +162,5 @@ api.registerTimeTickHandler(function(ts) {
 });
 
 api.registerUserDataUpdateHandler(handleUserData); // This will be called from frontend
+
+"EOF>>"
