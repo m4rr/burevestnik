@@ -97,7 +97,7 @@ struct peerState: Codable  {
 //final class SimplePeer1 {
 //
 //  private
-//  init(label: String, api: APIFuncs, didChangeState: @escaping AnyVoid) {
+//  init(label: String, api: LocalNetwork, didChangeState: @escaping AnyVoid) {
 //
 //    self.api = api
 //    self.Label = label

@@ -9,7 +9,7 @@ class BtMan: NSObject {
   private lazy var timer = Timer
     .scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
       if let ts = self?.started.timeIntervalSinceNow {
-        self?.meshAPI.TimeTickHandler(-ts)
+        self?.meshAPI.timeTickHandler(-ts)
       }
     }
 
@@ -91,10 +91,10 @@ extension BtMan: MCSessionDelegate {
     switch state {
     case .connected:
       peers[peerID.displayName] = peerID
-      meshAPI.PeerAppearedHandler(peerID.displayName)
+      meshAPI.peerAppearedHandler(peerID.displayName)
 
     case .notConnected:
-      meshAPI.PeerDisappearedHandler(peerID.displayName)
+      meshAPI.peerDisappearedHandler(peerID.displayName)
       peers[peerID.displayName] = nil
 
     default:
@@ -106,7 +106,7 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, data, peerID)
 
     if let str = data.string {
-      meshAPI.MessageHandler(peerID.displayName, str)
+      meshAPI.messageHandler(peerID.displayName, str)
     } else {
       assertionFailure("no data")
     }
@@ -176,13 +176,13 @@ extension BtMan {
 
 }
 
-extension BtMan: APIFuncs {
-
-  func GetMyID() -> NetworkID {
+extension BtMan: LocalNetwork {
+  
+  func getMyID() -> NetworkID {
     kThisDeviceName
   }
 
-  func SendMessage(peerID: NetworkID, data: NetworkMessage) {
+  func sendMessage(peerID: NetworkID, data: NetworkMessage) {
     sessionSend(to: peerID, data: data)
   }
 

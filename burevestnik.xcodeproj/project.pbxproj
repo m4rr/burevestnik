@@ -18,6 +18,7 @@
 		036E936D24E3E013001DA125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 036E936C24E3E013001DA125 /* Assets.xcassets */; };
 		036E937824E3EA9C001DA125 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 036E937724E3EA9C001DA125 /* Main.storyboard */; };
 		037A8FCC2507DAF3001D8A73 /* MeshControllerJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037A8FCB2507DAF3001D8A73 /* MeshControllerJS.swift */; };
+		037A8FCE25080056001D8A73 /* MeshAPIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037A8FCD25080056001D8A73 /* MeshAPIProtocol.swift */; };
 		0383B09C24ED5F830098E91F /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0383B09B24ED5F830098E91F /* Reachability.m */; };
 		0383B09F24ED60570098E91F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0383B09E24ED60570098E91F /* SystemConfiguration.framework */; };
 		038F195324F1605700DF48DD /* SimplePeer1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038F195224F1605700DF48DD /* SimplePeer1.swift */; };
@@ -43,6 +44,7 @@
 		036E937124E3E013001DA125 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		036E937724E3EA9C001DA125 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		037A8FCB2507DAF3001D8A73 /* MeshControllerJS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshControllerJS.swift; sourceTree = "<group>"; };
+		037A8FCD25080056001D8A73 /* MeshAPIProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshAPIProtocol.swift; sourceTree = "<group>"; };
 		0383B09924ED5F820098E91F /* burevestnik-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "burevestnik-Bridging-Header.h"; sourceTree = "<group>"; };
 		0383B09A24ED5F830098E91F /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		0383B09B24ED5F830098E91F /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
@@ -155,6 +157,7 @@
 		03D4D77D24E6F5530083432E /* API */ = {
 			isa = PBXGroup;
 			children = (
+				037A8FCD25080056001D8A73 /* MeshAPIProtocol.swift */,
 				03527B2124E6B05B00E9C6DB /* MeshAPI.swift */,
 			);
 			path = API;
@@ -264,6 +267,7 @@
 				03527B2224E6B05B00E9C6DB /* MeshAPI.swift in Sources */,
 				032BCFE324ED923A00543B66 /* Views.swift in Sources */,
 				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
+				037A8FCE25080056001D8A73 /* MeshAPIProtocol.swift in Sources */,
 				03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */,
 				03BE7B6B24F9C3D900CBE53C /* SimplePeerJS.swift in Sources */,
 			);

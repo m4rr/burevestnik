@@ -115,46 +115,42 @@ extension WebSocketConn {
     case .tick:
       guard let TS = args.TS else { return }
 
-      api.TimeTickHandler(TS)
+      api.timeTickHandler(TS)
 
     case .sendToPeer:
       guard let peerID = args.PeerID, let data = args.Data else { return }
 
-      self.SendMessage(peerID: peerID, data: data)
-
-    //      sessionSend(to: peerID, data: data)
+      self.sendMessage(peerID: peerID, data: data)
 
     // callbacks
 
     case .foundPeer:
       guard let peerID = args.PeerID else { return }
 
-      api.PeerAppearedHandler(peerID)
+      api.peerAppearedHandler(peerID)
 
     case .lostPeer:
       guard let peerID = args.PeerID else { return }
 
-      api.PeerDisappearedHandler(peerID)
+      api.peerDisappearedHandler(peerID)
 
     case .didReceiveFromPeer:
-      guard let peerID = args.PeerID, let data = args.Data?.data?.string else {
-        return
+      if let peerID = args.PeerID, let str = args.Data?.data?.string {
+        api.messageHandler(peerID, str)
       }
-
-      api.MessageHandler(peerID, data)
 
     }
   }
 
 }
 
-extension WebSocketConn: APIFuncs {
-
-  func GetMyID() -> NetworkID {
+extension WebSocketConn: LocalNetwork {
+  func getMyID() -> NetworkID {
     kThisDeviceName + "-WS"
   }
 
-  func SendMessage(peerID: NetworkID, data: NetworkMessage) {
+  func sendMessage(peerID: NetworkID, data: NetworkMessage) {
+
     sendToWs(Request(Cmd: .sendToPeer,
                      Args: .init(PeerID: peerID,
                                  Data: data,

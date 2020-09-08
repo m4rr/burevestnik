@@ -4,7 +4,7 @@
 //class SimplePeerJS {
 //
 //  private let context = JSContext()!
-//  private var api: APIFuncs!
+//  private var api: LocalNetwork!
 //
 //  private static var checkisonce: SimplePeerJS?
 //
