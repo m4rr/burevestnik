@@ -1,4 +1,5 @@
 import Foundation
+import JavaScriptCore
 
 class MeshAPI: NSObject, MeshAPIExports {
 
