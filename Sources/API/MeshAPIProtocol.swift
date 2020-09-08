@@ -7,18 +7,27 @@ typealias NetworkTime = TimeInterval
 
 //github.com/m4rr/burevestnik/blob/master/jsonrpc.md
 
+@objc
 protocol LocalNetwork: class {
 
   /// 0
-  func getMyID() -> NetworkID
+  func getMyID() -> String
 
   /// 4
   func sendMessage(peerID: NetworkID, data: NetworkMessage)
 
 }
 
-protocol MeshAPIProtocol: LocalNetwork, JSExport {
+@objc protocol MeshAPIProtocol: JSExport, LocalNetwork {
 
+  static func getInstance() -> MeshAPI
+
+  /// 0
+  func getMyID() -> NetworkID
+
+  /// 4
+  func sendMessage(peerID: NetworkID, data: NetworkMessage)
+  
   /// 1
   func registerTimeTickHandler(fn: @escaping (NetworkTime) -> Void)
 

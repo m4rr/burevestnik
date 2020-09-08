@@ -26,6 +26,10 @@ class BtMan: NSObject {
     self.meshAPI = meshAPI
   }
 
+  deinit {
+    
+  }
+
   private let localPeerID: MCPeerID = MCPeerID(displayName: kThisDeviceName)
 
   private lazy var session: MCSession! = MCSession(peer: localPeerID, securityIdentity: nil, encryptionPreference: .none)

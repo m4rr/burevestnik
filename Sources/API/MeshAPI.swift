@@ -2,6 +2,10 @@ import Foundation
 
 class MeshAPI: NSObject, MeshAPIProtocol {
 
+  static func getInstance() -> MeshAPI {
+   return MeshAPI()
+  }
+
   var localNetwork: LocalNetwork!
 
   override init() {
@@ -12,11 +16,11 @@ class MeshAPI: NSObject, MeshAPIProtocol {
 
   // funcs
 
-  func getMyID() -> NetworkID {
+  public func getMyID() -> NetworkID {
     localNetwork.getMyID()
   }
 
-  func sendMessage(peerID: NetworkID, data: NetworkMessage) {
+  public func sendMessage(peerID: NetworkID, data: NetworkMessage) {
     localNetwork.sendMessage(peerID: peerID, data: data)
   }
 
@@ -39,23 +43,23 @@ class MeshAPI: NSObject, MeshAPIProtocol {
 
   // callbacks
 
-  func registerPeerAppearedHandler(fn: @escaping (NetworkID) -> Void) {
+  public func registerPeerAppearedHandler(fn: @escaping (NetworkID) -> Void) {
     peerAppearedHandler = fn
   }
 
-  func registerPeerDisappearedHandler(fn: @escaping (NetworkID) -> Void) {
+  public func registerPeerDisappearedHandler(fn: @escaping (NetworkID) -> Void) {
     peerDisappearedHandler = fn
   }
 
-  func registerMessageHandler(fn: @escaping (NetworkID, NetworkMessage) -> Void) {
+  public func registerMessageHandler(fn: @escaping (NetworkID, NetworkMessage) -> Void) {
     messageHandler = fn
   }
 
-  func registerTimeTickHandler(fn: @escaping (NetworkTime) -> Void) {
+  public func registerTimeTickHandler(fn: @escaping (NetworkTime) -> Void) {
     timeTickHandler = fn
   }
 
-  func registerUserDataUpdateHandler(fn: @escaping () -> Void) {
+  public func registerUserDataUpdateHandler(fn: @escaping () -> Void) {
     userDataUpdateHandler = fn
   }
 

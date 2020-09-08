@@ -1,6 +1,7 @@
 import Foundation
 import JavaScriptCore
 
+public
 class MeshControllerJS {
 
   private let context = JSContext()!
@@ -9,16 +10,32 @@ class MeshControllerJS {
     runJS()
   }
 
+//  private lazy var api = MeshAPI()
+
   private func runJS() {
 
     guard let script = jsScript  else {
       return
     }
 
-    context
-      .setObject(MeshAPI.self,
-                 forKeyedSubscript: "MeshAPI"
-                  as (NSCopying & NSObjectProtocol)) // as NSString)
+//    let block: @convention(block) (CVaListPointer) -> Void = { vaList in
+//      debugPrint(vaList)
+//    }
+    let logger: @convention(block) (String, String) -> Void = { s1, s2 in
+      debugPrint(s1,s2)
+    }
+
+    context.setObject(logger, forKeyedSubscript: "log" as NSString)
+
+//    context.setObject(api, forKeyedSubscript: "api" as NSString)
+    context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
+
+
+//    let getMyID: @convention(block) () -> String = { () -> String in
+//      return "kekekekek"
+//    }
+//    context.setObject(getMyID, forKeyedSubscript: "api.getMyID" as (NSCopying & NSObjectProtocol))
+
 
     context.exceptionHandler = { ctx, value in
       debugPrint(ctx ?? "js exception no ctx",
@@ -30,7 +47,7 @@ class MeshControllerJS {
   }
 
   private var jsURL: URL? {
-    Bundle.main.url(forResource: "local_peer_model", withExtension: "js")
+    Bundle.main.url(forResource: "peer", withExtension: "js")
   }
 
   private var jsScript: String? {

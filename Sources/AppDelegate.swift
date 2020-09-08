@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // FIXME
 //    vc?.uiHandler = meshCon
 
+    _ = meshCon
+    
     return true
   }
 
