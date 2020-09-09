@@ -60,11 +60,13 @@ class MeshAPI: NSObject, MeshAPIExports {
   private var _peerAppearedHandler: JSValue!
   func peerAppearedHandler(_ id: NetworkID) -> Void {
     _peerAppearedHandler.call(withArguments: [id])
+    handleUpdate()
   }
 
   private var _peerDisappearedHandler: JSValue!
   func peerDisappearedHandler(_ id: NetworkID) -> Void {
     _peerDisappearedHandler.call(withArguments: [id])
+    handleUpdate()
   }
 
   private var _messageHandler: JSValue!

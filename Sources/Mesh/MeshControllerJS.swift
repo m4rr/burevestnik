@@ -60,6 +60,9 @@ public class MeshControllerJS: UiHandler {
 
   private func updateStuff() {
     data = getMessages()
+      .sorted(by: { (b1, b2) -> Bool in
+        b2.from.lexicographicallyPrecedes(b1.from)
+      })
   }
 
   var data: [BroadMessage] = [] {

@@ -137,7 +137,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     if let data = uiHandler?.dataAt(indexPath) {
       cell.t1?.text = data.msg
-      cell.t2?.text = data.ti.description
+      cell.t2?.text = data.from + " / " + data.ti.description
     }
 
     return cell
