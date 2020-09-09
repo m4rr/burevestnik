@@ -63,7 +63,7 @@ class BtMan: NSObject {
   private func startAdvertising() {
 
     if advertiser == nil {
-      advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: ["me": localPeerID.displayName], serviceType: kMCSessionService)
+      advertiser = MCNearbyServiceAdvertiser(peer: localPeerID, discoveryInfo: nil, serviceType: kMCSessionService)
       advertiser.delegate = self
     }
 
