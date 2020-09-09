@@ -37,11 +37,7 @@ class BtMan: NSObject {
   private var browser: MCNearbyServiceBrowser!
   private var advertiser: MCNearbyServiceAdvertiser!
 
-  private var peers: [NetworkID: Data] = [:] {
-    didSet {
-      numberOfPeers(peers.count)
-    }
-  }
+  private var peers: [NetworkID: Data] = [:]
 
   private func startSession() {
     session.delegate = self
@@ -104,8 +100,6 @@ class BtMan: NSObject {
       debugPrint(err)
     }
   }
-
-  var numberOfPeers: (Int) -> Void = { cou in debugPrint("numberOfPeers not imp", cou)}
 
 }
 
@@ -190,6 +184,10 @@ extension BtMan: MCNearbyServiceAdvertiserDelegate {
 }
 
 extension BtMan: LocalNetwork {
+
+  var numberOfPeers: Int {
+    peers.count + 1
+  }
   
   func myID() -> NetworkID {
     kThisDeviceName

@@ -38,8 +38,6 @@ class WebSocketConn {
     }
   }
 
-  var numberOfPeers: (Int) -> Void = { _ in }
-
   private let wssURL: URL
   private var wsTask: URLSessionWebSocketTask?
 
@@ -151,6 +149,10 @@ extension WebSocketConn {
 
 @available(iOS 13.0, *)
 extension WebSocketConn: LocalNetwork {
+
+  var numberOfPeers: Int {
+    0
+  }
 
   func myID() -> NetworkID {
     kThisDeviceName + "-WS"

@@ -20,6 +20,8 @@ class ViewController: UIViewController {
 
   func reloadTableView() {
     tableView.reloadData()
+
+    peersButton.title = "\(uiHandler?.numberOfPeers ?? 0) Peers"
   }
 
   private var locMan: LocationMan?

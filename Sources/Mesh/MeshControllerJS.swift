@@ -88,6 +88,10 @@ public class MeshControllerJS: UiHandler {
 
 extension MeshControllerJS: UiProvider {
 
+  var numberOfPeers: Int {
+    meshAPI.localNetwork.numberOfPeers
+  }
+
   func getMessages() -> [BroadMessage] {
 
     if let msgs = context

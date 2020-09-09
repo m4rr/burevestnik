@@ -31,4 +31,6 @@ protocol UiProvider {
   var dataCount: Int { get }
   func dataAt(_ indexPath: IndexPath) -> BroadMessage
 
+  var numberOfPeers: Int { get }
+
 }

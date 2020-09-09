@@ -6,6 +6,6 @@ protocol LocalNetwork: class {
 
   func sendToPeer(id: NetworkID, data: NetworkMessage)
 
-  var numberOfPeers: (Int) -> Void { get set }
+  var numberOfPeers: Int { get }
 
 }
