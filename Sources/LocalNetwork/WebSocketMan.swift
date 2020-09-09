@@ -16,6 +16,7 @@ struct Arguments: Codable {
   let PeerID: String?, Data: String?, TS: NetworkTime?
 }
 
+@available(iOS 13.0, *)
 class WebSocketConn {
 
   struct Request: Codable {
@@ -106,6 +107,7 @@ class WebSocketConn {
 }
 
 
+@available(iOS 13.0, *)
 extension WebSocketConn {
 
   func invoke(cmd: Command, args: Arguments) {
@@ -139,6 +141,7 @@ extension WebSocketConn {
     case .didReceiveFromPeer:
       if let peerID = args.PeerID, let str = args.Data?.data?.string {
         api.messageHandler(peerID, str)
+
       }
 
     }
@@ -146,6 +149,7 @@ extension WebSocketConn {
 
 }
 
+@available(iOS 13.0, *)
 extension WebSocketConn: LocalNetwork {
 
   func myID() -> NetworkID {
