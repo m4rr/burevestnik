@@ -1,7 +1,15 @@
 import UIKit
 
+let uuidTakeLength = 5
+
+var kThisDeviceName: String {
+  _kThisDeviceName + uuidTake
+}
+
 /// keep the name unless the app is alive
-let kThisDeviceName = UIDevice.current.name
+private let _kThisDeviceName = UIDevice.current.name
+private let uuidKey = "myuuid"
+private var uuidTake = UserDefaults.standard.string(forKey: uuidKey) ?? ""
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -11,6 +19,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private lazy var meshCon = MeshControllerJS()
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+    let def = UserDefaults.standard
+
+    if nil == def.string(forKey: uuidKey) {
+      let uuid = UUID().uuidString
+      let uuidTake = "-" + String(uuid.dropFirst(uuid.count + 1 - uuidTakeLength))
+
+      def.setValue(uuidTake, forKey: uuidKey)
+    }
 
     window?.tintColor = .systemRed
 

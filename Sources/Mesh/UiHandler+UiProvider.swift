@@ -6,8 +6,11 @@ struct BroadMessage: Equatable {
   let msg: NetworkMessage
   let from: NetworkID
 
-  static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
+  var simpleFrom: String {
+    deviceNameRemovingUUID(from)
+  }
 
+  static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
 
     let valueDic = json.val as? [String: Any]
 
@@ -17,6 +20,9 @@ struct BroadMessage: Equatable {
       from: json.key as? String ?? "-no key-")
   }
 
+  private func deviceNameRemovingUUID(_ name: String) -> String {
+    String(name.dropLast(uuidTakeLength))
+  }
 }
 
 protocol UiHandler: class {
@@ -32,5 +38,7 @@ protocol UiProvider {
   func dataAt(_ indexPath: IndexPath) -> BroadMessage
 
   var numberOfPeers: Int { get }
+
+//  func isConflicting(_ name: String) -> Bool
 
 }

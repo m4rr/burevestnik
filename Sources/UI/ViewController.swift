@@ -135,9 +135,15 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-    if let data = uiHandler?.dataAt(indexPath) {
+    if let uiHandler = uiHandler {
+
+      let data = uiHandler.dataAt(indexPath)
+
       cell.t1?.text = data.msg
-      cell.t2?.text = data.from + " / " + data.ti.description
+
+//      let name = uiHandler.isConflicting(data.simpleFrom) ? data.from : data.simpleFrom
+
+      cell.t2?.text = data.simpleFrom + " / " + data.ti.description
     }
 
     return cell

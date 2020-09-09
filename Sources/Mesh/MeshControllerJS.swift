@@ -59,11 +59,20 @@ public class MeshControllerJS: UiHandler {
   }
 
   private func updateStuff() {
-    data = getMessages()
-      .sorted(by: { (b1, b2) -> Bool in
-        b2.from.lexicographicallyPrecedes(b1.from)
-      })
+
+    let msgs = getMessages()
+      .sorted { m1, m2 in
+        m1.from < m2.from
+      }
+
+//    let cs = NSCountedSet(array: msgs.map { $0.simpleFrom })
+//    conflictingShortNames = cs
+//      .filter({ cs.count(for: $0) > 1 }) as? [String] ?? []
+
+    data = msgs
   }
+
+//  private var conflictingShortNames: [String] = []
 
   var data: [BroadMessage] = [] {
     didSet {
@@ -117,5 +126,9 @@ extension MeshControllerJS: UiProvider {
   var dataCount: Int {
     data.count
   }
+
+//  func isConflicting(_ name: String) -> Bool {
+//    conflictingShortNames.contains(name)
+//  }
 
 }
