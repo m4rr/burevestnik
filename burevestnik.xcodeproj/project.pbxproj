@@ -145,8 +145,8 @@
 		03D4D77C24E6F54A0083432E /* LocalNetwork */ = {
 			isa = PBXGroup;
 			children = (
-				03AE437F24E44127000D82B7 /* BluetoothMan.swift */,
 				034A5C3B25093C5E00451B92 /* LocalNetwork.swift */,
+				03AE437F24E44127000D82B7 /* BluetoothMan.swift */,
 				03527B2324E6B06900E9C6DB /* WebSocketMan.swift */,
 			);
 			path = LocalNetwork;
