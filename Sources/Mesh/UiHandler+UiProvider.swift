@@ -1,7 +1,7 @@
 import Foundation
 
 @available(iOS 13.0, *)
-private let rdtf = RelativeDateTimeFormatter()
+private let relativeDateFormatter = RelativeDateTimeFormatter()
 
 struct BroadMessage: Equatable {
 
@@ -14,15 +14,16 @@ struct BroadMessage: Equatable {
   }
 
   var simpleDate: String {
+    let messageDate = Date(timeIntervalSinceReferenceDate: TimeInterval(ti) / 1000)
+
     if #available(iOS 13.0, *) {
-      return rdtf.localizedString(
-        for: Date(timeIntervalSinceReferenceDate: TimeInterval(ti) / 1000),
-        relativeTo: Date())
-    } else {
-      return DateFormatter.localizedString(
-        from: Date(timeIntervalSinceReferenceDate: TimeInterval(ti) / 1000),
-        dateStyle: .medium, timeStyle: .medium)
+      relativeDateFormatter.dateTimeStyle = .named
+
+      return relativeDateFormatter.localizedString(for: messageDate, relativeTo: Date())
     }
+
+    // fallback formatter
+    return DateFormatter.localizedString(from: messageDate, dateStyle: .medium, timeStyle: .medium)
   }
 
   static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
@@ -38,6 +39,7 @@ struct BroadMessage: Equatable {
   private func deviceNameRemovingUUID(_ name: String) -> String {
     String(name.dropLast(uuidTakeLength))
   }
+
 }
 
 protocol UiHandler: class {
