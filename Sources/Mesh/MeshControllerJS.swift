@@ -62,7 +62,7 @@ public class MeshControllerJS: UiHandler {
 
     let msgs = getMessages()
       .sorted { m1, m2 in
-        m1.from < m2.from
+        m1.ti < m2.ti
       }
 
 //    let cs = NSCountedSet(array: msgs.map { $0.simpleFrom })
