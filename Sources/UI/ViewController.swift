@@ -66,7 +66,11 @@ class ViewController: UIViewController {
   @IBAction func gpsButtonDidTap(_ sender: UIBarButtonItem) {
     isGPSSharingOn.toggle()
   }
-  
+
+  @IBAction func peersButtonDidTap(_ sender: UIBarButtonItem) {
+    reloadTableView()
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -80,12 +84,6 @@ class ViewController: UIViewController {
     DispatchQueue.main.async { self.isGPSSharingOn = false }
 
     setupReachability()
-
-//    peersButton.add
-  }
-
-  @IBAction func peersButtonDidTap(_ sender: UIBarButtonItem) {
-    reloadTableView()
   }
 
   private func setupMapWrapperView() {
