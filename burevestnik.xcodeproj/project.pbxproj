@@ -96,7 +96,6 @@
 			isa = PBXGroup;
 			children = (
 				03527B1F24E6AE5A00E9C6DB /* README.md */,
-				03BE7B6C24F9C3FD00CBE53C /* peer.js */,
 				0367608A24E72B9F00556EFA /* Sources */,
 				036E936224E3E00D001DA125 /* burevestnik */,
 				036E936124E3E00D001DA125 /* Products */,
@@ -167,6 +166,7 @@
 			children = (
 				03D7236824E6D05F003B3211 /* UiHandler+UiProvider.swift */,
 				037A8FCB2507DAF3001D8A73 /* MeshControllerJS.swift */,
+				03BE7B6C24F9C3FD00CBE53C /* peer.js */,
 			);
 			path = Mesh;
 			sourceTree = "<group>";
