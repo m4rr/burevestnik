@@ -1,29 +1,30 @@
 import Foundation
 import MultipeerConnectivity
 
+let tickInterval: TimeInterval = 1 / 100
 private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
 
   private let started = Date()
-  private lazy var timer = Timer
-    .scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-      if let ts = self?.started.timeIntervalSinceNow {
-        self?.meshAPI.timeTickHandler(-ts)
-      }
-    }
+  private var timer: Timer?
 
   /// Starts multipeer session when assigned.
-  weak var meshAPI: MeshAPI! {
-    didSet {
-      startSession()
-
-      _ = timer.description
-    }
-  }
+  weak var meshAPI: MeshAPI!
 
   init(meshAPI: MeshAPI) {
     self.meshAPI = meshAPI
+
+    super.init()
+    
+    startSession()
+
+    timer = Timer.scheduledTimer(withTimeInterval: tickInterval, repeats: true) { [weak self] _ in
+      if let ts = self?.started.timeIntervalSinceNow {
+        self?.meshAPI.timeTickHandler(NetworkTime(Int(-ts * 1000)))
+      }
+    }
+    timer?.tolerance = tickInterval / 10
   }
 
   deinit {
@@ -36,7 +37,11 @@ class BtMan: NSObject {
   private var browser: MCNearbyServiceBrowser!
   private var advertiser: MCNearbyServiceAdvertiser!
 
-  private var peers: [NetworkID: MCPeerID] = [:]
+  private var peers: [NetworkID: Data] = [:] {
+    didSet {
+      numberOfPeers(peers.count)
+    }
+  }
 
   private func startSession() {
     session.delegate = self
@@ -85,6 +90,23 @@ class BtMan: NSObject {
     browser.startBrowsingForPeers()
   }
 
+
+  private func sessionSend(to id: NetworkID, data str: String) {
+
+    // Do not attempt to construct a peer ID object for a nonlocal peer
+    guard let data = str.data, let peerData = peers[id], let peerID = unarchivePeerID(peerData) else {
+      return debugPrint("no---err")
+    }
+
+    do {
+      try session.send(data, toPeers: [peerID], with: .reliable)
+    } catch let err {
+      debugPrint(err)
+    }
+  }
+
+  var numberOfPeers: (Int) -> Void = { cou in debugPrint("numberOfPeers not imp", cou)}
+
 }
 
 extension BtMan: MCSessionDelegate {
@@ -94,12 +116,13 @@ extension BtMan: MCSessionDelegate {
 
     switch state {
     case .connected:
-      peers[peerID.displayName] = peerID
+      peers[peerID.displayName] = archivePeerID(peerID)
       meshAPI.peerAppearedHandler(peerID.displayName)
 
     case .notConnected:
-      meshAPI.peerDisappearedHandler(peerID.displayName)
-      peers[peerID.displayName] = nil
+//      meshAPI.peerDisappearedHandler(peerID.displayName)
+//      peers[peerID.displayName] = nil
+    ()
 
     default:
       ()
@@ -148,6 +171,9 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
   }
 
   func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+    meshAPI.peerDisappearedHandler(peerID.displayName)
+    peers[peerID.displayName] = nil
+
     debugPrint(#function, peerID)
   }
 }
@@ -163,31 +189,14 @@ extension BtMan: MCNearbyServiceAdvertiserDelegate {
   }
 }
 
-extension BtMan {
-
-  func sessionSend(to peerID: String, data str: String) {
-    // Do not attempt to construct a peer ID object for a nonlocal peer
-    guard let data = str.data, let toPeer = peers[peerID] else {
-      return debugPrint("no---err")
-    }
-
-    do {
-      try session.send(data, toPeers: [toPeer], with: .reliable)
-    } catch let err {
-      debugPrint(err)
-    }
-  }
-
-}
-
 extension BtMan: LocalNetwork {
   
-  func getMyID() -> NetworkID {
+  func myID() -> NetworkID {
     kThisDeviceName
   }
 
-  func sendMessage(peerID: NetworkID, data: NetworkMessage) {
-    sessionSend(to: peerID, data: data)
+  func sendToPeer(id: NetworkID, data: NetworkMessage) {
+    sessionSend(to: id, data: data)
   }
 
 }

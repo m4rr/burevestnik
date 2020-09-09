@@ -112,7 +112,7 @@ class ViewController: UIViewController {
 
     alert.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak alert] _ in
       if let text = alert?.textFields?.first?.text {
-        self.uiHandler?.sendMessage(text)
+        self.uiHandler?.broadcastMessage(text)
       }
     }))
 

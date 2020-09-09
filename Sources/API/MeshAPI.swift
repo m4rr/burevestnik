@@ -4,12 +4,17 @@ import JavaScriptCore
 class MeshAPI: NSObject, MeshAPIExports {
 
   class func getInstance() -> MeshAPI {
-    return MeshAPI()
+    return MeshAPI {
+      //
+    }
   }
 
+  var handleUpdate: AnyVoid
   var localNetwork: LocalNetwork!
 
-  override init() {
+  init(handleUpdate: @escaping AnyVoid) {
+    self.handleUpdate = handleUpdate
+
     super.init()
 
     self.localNetwork = BtMan(meshAPI: self) // WebSocketConn()
@@ -18,11 +23,11 @@ class MeshAPI: NSObject, MeshAPIExports {
   // funcs
 
   func getMyID() -> NetworkID {
-    localNetwork.getMyID()
+    localNetwork.myID()
   }
 
   func sendMessage(_ peerID: NetworkID, _ data: NetworkMessage) {
-    localNetwork.sendMessage(peerID: peerID, data: data)
+    localNetwork.sendToPeer(id: peerID, data: data)
   }
 
   func registerPeerAppearedHandler(_ f: JSValue) {
@@ -47,6 +52,7 @@ class MeshAPI: NSObject, MeshAPIExports {
 
   func setDebugMessage(_ json: String) {
     debugPrint(json)
+    handleUpdate()
   }
 
   // storage
@@ -73,7 +79,7 @@ class MeshAPI: NSObject, MeshAPIExports {
 
   private var _userDataUpdateHandler: JSValue!
   func userDataUpdateHandler(data: NetworkMessage) {
-    _userDataUpdateHandler.call(withArguments: ["{Message: \(data)}"])
+    _userDataUpdateHandler.call(withArguments: [["Message": data]])
   }
 
 }

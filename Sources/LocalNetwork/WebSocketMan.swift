@@ -13,7 +13,7 @@ enum Command: String, Codable {
 }
 
 struct Arguments: Codable {
-  let PeerID: String?, Data: String?, TS: TimeInterval?
+  let PeerID: String?, Data: String?, TS: NetworkTime?
 }
 
 class WebSocketConn {
@@ -36,6 +36,8 @@ class WebSocketConn {
       connect()
     }
   }
+
+  var numberOfPeers: (Int) -> Void = { _ in }
 
   private let wssURL: URL
   private var wsTask: URLSessionWebSocketTask?
@@ -120,7 +122,7 @@ extension WebSocketConn {
     case .sendToPeer:
       guard let peerID = args.PeerID, let data = args.Data else { return }
 
-      self.sendMessage(peerID: peerID, data: data)
+      self.sendToPeer(id: peerID, data: data)
 
     // callbacks
 
@@ -145,14 +147,15 @@ extension WebSocketConn {
 }
 
 extension WebSocketConn: LocalNetwork {
-  func getMyID() -> NetworkID {
+
+  func myID() -> NetworkID {
     kThisDeviceName + "-WS"
   }
 
-  func sendMessage(peerID: NetworkID, data: NetworkMessage) {
+  func sendToPeer(id: NetworkID, data: NetworkMessage) {
 
     sendToWs(Request(Cmd: .sendToPeer,
-                     Args: .init(PeerID: peerID,
+                     Args: .init(PeerID: id,
                                  Data: data,
                                  TS: nil)))
   }

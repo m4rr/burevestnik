@@ -4,6 +4,7 @@ import JavaScriptCore
 public class MeshControllerJS: UiHandler {
 
   private let context = JSContext()!
+  private lazy var meshAPI = MeshAPI(handleUpdate: updateStuff)
 
   init() {
     runJS()
@@ -12,8 +13,6 @@ public class MeshControllerJS: UiHandler {
   deinit {
     debugPrint("MeshControllerJS deinit")
   }
-
-  private lazy var meshAPI = MeshAPI()
 
   private func runJS() {
 
@@ -58,17 +57,29 @@ public class MeshControllerJS: UiHandler {
     return nil
   }
 
+  private func updateStuff() {
+    data = getMessages()
+  }
+
+  var data: [BroadMessage] = [] {
+    didSet {
+      DispatchQueue.main.async {
+        self.reloadHandler()
+      }
+    }
+  }
+
   // MARK: - UiHandler
 
   var reloadHandler: AnyVoid = { debugPrint("reloadHandler not set up") }
 
-  func sendMessage(_ text: String) {
+  func broadcastMessage(_ text: String) {
 
     meshAPI.userDataUpdateHandler(data: text)
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-      self.reloadHandler()
-    }
+
+
+
   }
 
 }
@@ -77,24 +88,27 @@ public class MeshControllerJS: UiHandler {
 
 extension MeshControllerJS: UiProvider {
 
-  private var mess: [BroadMessage] {
-    let msgs = context
-      .objectForKeyedSubscript("meshNetworkState" as NSString)?
-      .call(withArguments: [])
+  func getMessages() -> [BroadMessage] {
 
+    if let msgs = context
+        .objectForKeyedSubscript("meshNetworkState" as NSString)?
+        .toDictionary() {
 
-    debugPrint("msgs", msgs, msgs?.toDictionary())
+      let res =  msgs.map(BroadMessage.from)
+
+      return res
+
+    }
 
     return []
   }
 
   func dataAt(_ indexPath: IndexPath) -> BroadMessage {
-    mess[indexPath.row]
+    data[indexPath.row]
   }
 
   var dataCount: Int {
-    mess.count
+    data.count
   }
 
 }
-

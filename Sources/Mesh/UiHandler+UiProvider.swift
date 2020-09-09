@@ -2,15 +2,19 @@ import Foundation
 
 struct BroadMessage: Equatable {
 
-  let ti: Double
-  let msg: String
-  let from: String
+  let ti: NetworkTime
+  let msg: NetworkMessage
+  let from: NetworkID
 
   static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
+
+
+    let valueDic = json.val as? [String: Any]
+
     return BroadMessage(
-      ti: ((json.val as? [String: Any])?["UpdateTS"] as? Double) ?? 0,
-      msg: ((json.val as? [String: Any])?["UserState"] as? [String: String])?["Message"] ?? "-no-",
-      from: (json.key as? String) ?? "-no key-")
+      ti: (valueDic?["UpdateTS"] as? NetworkTime) ?? -1,
+      msg: (valueDic?["UserState"] as? [String: String])?["Message"] ?? "-no-",
+      from: json.key as? String ?? "-no key-")
   }
 
 }
@@ -18,7 +22,7 @@ struct BroadMessage: Equatable {
 protocol UiHandler: class {
 
   var reloadHandler: AnyVoid { get set }
-  func sendMessage(_ text: String)
+  func broadcastMessage(_ text: String)
 
 }
 

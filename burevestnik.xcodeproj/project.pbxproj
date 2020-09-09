@@ -10,6 +10,7 @@
 		032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032BCFDF24ED8D1400543B66 /* LocationMan.swift */; };
 		032BCFE324ED923A00543B66 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032BCFE224ED923A00543B66 /* Views.swift */; };
 		0341A24D24E58A9F001C8005 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */; };
+		034A5C3C25093C5E00451B92 /* LocalNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 034A5C3B25093C5E00451B92 /* LocalNetwork.swift */; };
 		03527B2224E6B05B00E9C6DB /* MeshAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2124E6B05B00E9C6DB /* MeshAPI.swift */; };
 		03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03527B2324E6B06900E9C6DB /* WebSocketMan.swift */; };
 		0367608924E719B900556EFA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0367608824E719B900556EFA /* Extensions.swift */; };
@@ -30,6 +31,7 @@
 		032BCFDF24ED8D1400543B66 /* LocationMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMan.swift; sourceTree = "<group>"; };
 		032BCFE224ED923A00543B66 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		0341A24C24E58A9F001C8005 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		034A5C3B25093C5E00451B92 /* LocalNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNetwork.swift; sourceTree = "<group>"; };
 		03527B1F24E6AE5A00E9C6DB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		03527B2124E6B05B00E9C6DB /* MeshAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshAPI.swift; sourceTree = "<group>"; };
 		03527B2324E6B06900E9C6DB /* WebSocketMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketMan.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				03AE437F24E44127000D82B7 /* BluetoothMan.swift */,
+				034A5C3B25093C5E00451B92 /* LocalNetwork.swift */,
 				03527B2324E6B06900E9C6DB /* WebSocketMan.swift */,
 			);
 			path = LocalNetwork;
@@ -254,6 +257,7 @@
 				03D7236924E6D05F003B3211 /* UiHandler+UiProvider.swift in Sources */,
 				03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */,
 				036E936824E3E00D001DA125 /* ViewController.swift in Sources */,
+				034A5C3C25093C5E00451B92 /* LocalNetwork.swift in Sources */,
 				032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */,
 				0367608924E719B900556EFA /* Extensions.swift in Sources */,
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
