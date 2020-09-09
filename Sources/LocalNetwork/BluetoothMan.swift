@@ -6,7 +6,6 @@ private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
 
-  private let started = Date()
   private var timer: Timer?
 
   /// Starts multipeer session when assigned.
@@ -20,9 +19,10 @@ class BtMan: NSObject {
     startSession()
 
     timer = Timer.scheduledTimer(withTimeInterval: tickInterval, repeats: true) { [weak self] _ in
-      if let ts = self?.started.timeIntervalSinceNow {
-        self?.meshAPI.timeTickHandler(NetworkTime(Int(-ts * 1000)))
-      }
+
+      let ts = NetworkTime(Date.timeIntervalSinceReferenceDate) * 1000
+
+      self?.meshAPI.timeTickHandler(ts)
     }
     timer?.tolerance = tickInterval / 10
   }
