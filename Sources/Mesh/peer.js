@@ -153,11 +153,6 @@ api.registerTimeTickHandler(function(ts) {
     for(var id in syncers) {
         syncers[id].tick(ts);
     }
-
-    if(currentTS > nextTestSendTime) { //debug
-        nextTestSendTime = currentTS + 5e6;
-        handleUserData({Message: myId + " says " + (currentTS/1000.0).toFixed(0)})
-    }
 });
 
 api.registerUserDataUpdateHandler(handleUserData); // This will be called from frontend

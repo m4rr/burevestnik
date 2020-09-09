@@ -21,7 +21,9 @@ class ViewController: UIViewController {
   func reloadTableView() {
     tableView.reloadData()
 
-    peersButton.title = "\(uiHandler?.numberOfPeers ?? 0) Peers"
+    let numberOfPeers = uiHandler?.numberOfPeers ?? 0
+
+    peersButton.title = "\(numberOfPeers) Online"
   }
 
   private var locMan: LocationMan?
@@ -78,6 +80,12 @@ class ViewController: UIViewController {
     DispatchQueue.main.async { self.isGPSSharingOn = false }
 
     setupReachability()
+
+//    peersButton.add
+  }
+
+  @IBAction func peersButtonDidTap(_ sender: UIBarButtonItem) {
+    reloadTableView()
   }
 
   private func setupMapWrapperView() {
@@ -143,7 +151,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
 //      let name = uiHandler.isConflicting(data.simpleFrom) ? data.from : data.simpleFrom
 
-      cell.t2?.text = data.simpleFrom + " / " + data.ti.description
+      cell.t2?.text = data.simpleFrom + " / " + data.simpleDate
     }
 
     return cell

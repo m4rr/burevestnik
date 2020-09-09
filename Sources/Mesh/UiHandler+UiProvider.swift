@@ -1,5 +1,8 @@
 import Foundation
 
+@available(iOS 13.0, *)
+private let rdtf = RelativeDateTimeFormatter()
+
 struct BroadMessage: Equatable {
 
   let ti: NetworkTime
@@ -8,6 +11,18 @@ struct BroadMessage: Equatable {
 
   var simpleFrom: String {
     deviceNameRemovingUUID(from)
+  }
+
+  var simpleDate: String {
+    if #available(iOS 13.0, *) {
+      return rdtf.localizedString(
+        for: Date(timeIntervalSinceReferenceDate: TimeInterval(ti) / 1000),
+        relativeTo: Date())
+    } else {
+      return DateFormatter.localizedString(
+        from: Date(timeIntervalSinceReferenceDate: TimeInterval(ti) / 1000),
+        dateStyle: .medium, timeStyle: .medium)
+    }
   }
 
   static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
