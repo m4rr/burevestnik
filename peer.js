@@ -1,14 +1,13 @@
 log('started');
-
 try {
   if (!!api) {
-    log(api)
+    // exists, injected by Swift/JavaScriptCore
   } else {
-    var api = new MeshAPI();
+    var api = new MeshAPI(); // Swift does not expose init(), so if cannot create...
   }
 }
 catch(e){
-  var api = MeshAPI.getInstance();
+  var api = MeshAPI.getInstance(); // ... go getInstance like that
 }
 var myId = api.getMyID();
 log('my ID:', myId);
@@ -22,7 +21,7 @@ function newPeerToPeerSyncer(sender_func) {
     s.lastAttemptTS = 0;
     s.lastTickTime = 0;
     s.synced = true;
-  s.delay = 30000;
+    s.delay = 30000;
     s.updatePkg = {TS: 0, Data: ""};
     
     s.sender = sender_func;
@@ -64,7 +63,7 @@ api.registerPeerAppearedHandler(function(id) {
         api.sendMessage(id, JSON.stringify(p));
     });
     if(Object.keys(meshNetworkState).length > 0) {
-    syncers[id].updateData(meshNetworkState);
+        syncers[id].updateData(meshNetworkState);
     }
 });
 
@@ -74,15 +73,15 @@ api.registerPeerDisappearedHandler(function(id) {
 
 function sendDbgData() {
     api.setDebugMessage(JSON.stringify({
-    MyID: myId,
-    MyTS: currentTS,
-    PeersState: meshNetworkState
-  }))
+        MyID: myId,
+        MyTS: currentTS,
+        PeersState: meshNetworkState
+    }))
 }
 
 function handleNewIncomingState(sourceID, update) {
     var newNetworkState = update.Data;
-  var somethingChanged = false;
+    var somethingChanged = false;
     for(var id in newNetworkState) {
         var newPeerState = newNetworkState[id];
         if(meshNetworkState[id] == undefined) {
@@ -97,15 +96,15 @@ function handleNewIncomingState(sourceID, update) {
         }
     }
 
-  if(somethingChanged == true) {
-    sendDbgData()
-    for(var id in syncers) {
-      if(sourceID == id) {
-        continue
-      }
-      syncers[id].updateData(meshNetworkState)
+    if(somethingChanged == true) {
+        sendDbgData()
+        for(var id in syncers) {
+            if(sourceID == id) {
+                continue
+            }
+            syncers[id].updateData(meshNetworkState)
+        }
     }
-  }
 }
 
 
@@ -116,35 +115,35 @@ api.registerMessageHandler(function(id, data) {
     catch(e) {
         return;
     }
-  switch(inpkg.Type) {
-  case "pkgStateUpdate":
-    var update = inpkg.Content;
+    switch(inpkg.Type) {
+    case "pkgStateUpdate":
+        var update = inpkg.Content;
         handleNewIncomingState(id, update)
 
-    var ack = {}
-    ack.TS = update.TS;
-    var p = {Type: "pkgStateUpdateReceivedAck", Content: ack};
-    api.sendMessage(id, JSON.stringify(p));
-    break;
-  case "pkgStateUpdateReceivedAck":
-    if(syncers[id] != undefined){
-      var ack = inpkg.Content;
-      syncers[id].handleAck(ack);
+        var ack = {}
+        ack.TS = update.TS;
+        var p = {Type: "pkgStateUpdateReceivedAck", Content: ack};
+        api.sendMessage(id, JSON.stringify(p));
+        break;
+    case "pkgStateUpdateReceivedAck":
+        if(syncers[id] != undefined){
+            var ack = inpkg.Content;
+            syncers[id].handleAck(ack);
+        }
+        break;
     }
-    break;
-  }
 });
 
 
 function handleUserData(userDataObject) {
     meshNetworkState[myId] = {
-    UserState: userDataObject,
-    UpdateTS:  currentTS
+        UserState: userDataObject,
+        UpdateTS:  currentTS
     };
-  sendDbgData();
-  for(var id in syncers) {
-    syncers[id].updateData(meshNetworkState)
-  }
+    sendDbgData();
+    for(var id in syncers) {
+        syncers[id].updateData(meshNetworkState)
+    }
 }
 
 var nextTestSendTime = 0;
@@ -162,5 +161,3 @@ api.registerTimeTickHandler(function(ts) {
 });
 
 api.registerUserDataUpdateHandler(handleUserData); // This will be called from frontend
-
-"EOF>>"
