@@ -24,16 +24,17 @@ typealias NetworkTime = Int
   // MARK: - Callbacks (each recieves a function that cannot be expressed with Swift)
   
   /// 1
-  func registerTimeTickHandler(_: JSValue)
+  func registerTimeTickHandler(_ f: JSValue)
 
   /// 2
-  func registerPeerAppearedHandler(_: JSValue)
+  func registerPeerAppearedHandler(_ f: JSValue)
+
   /// 3
-  func registerPeerDisappearedHandler(_: JSValue)
+  func registerPeerDisappearedHandler(_ f: JSValue)
 
   /// 5
-  func registerMessageHandler(_: JSValue)
+  func registerMessageHandler(_ f: JSValue)
 
-  func registerUserDataUpdateHandler(_: JSValue)
+  func registerUserDataUpdateHandler(_ f: JSValue)
 
 }

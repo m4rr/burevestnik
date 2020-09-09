@@ -3,7 +3,7 @@ import JavaScriptCore
 
 public class MeshControllerJS: UiHandler {
 
-  private let context = JSContext()!
+  private let context = JSContext()! // old-fashioned objc api offers to use it explicitly, see docs
   private lazy var meshAPI = MeshAPI(handleUpdate: updateStuff)
 
   init() {
@@ -21,7 +21,8 @@ public class MeshControllerJS: UiHandler {
     }
 
     let logger: @convention(block) (String, String) -> Void = { s1, s2 in
-      debugPrint(s1, s2 == "undefined" ? "" : s2)
+      // Swift cannot export `String...` or va_list to the JS
+      debugPrint(s1, s2)
     }
     context.setObject(
       unsafeBitCast(logger, to: AnyObject.self),
@@ -31,7 +32,7 @@ public class MeshControllerJS: UiHandler {
       unsafeBitCast(meshAPI, to: AnyObject.self),
       forKeyedSubscript: "api" as NSString)
 
-//    context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
+    // context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
 
     context.exceptionHandler = { ctx, value in
       debugPrint(ctx ?? "js exception no ctx",
@@ -77,9 +78,6 @@ public class MeshControllerJS: UiHandler {
 
     meshAPI.userDataUpdateHandler(data: text)
 
-
-
-
   }
 
 }
@@ -93,6 +91,8 @@ extension MeshControllerJS: UiProvider {
   }
 
   func getMessages() -> [BroadMessage] {
+
+    // FIXME: use `handleUpdate` callback from JS
 
     if let msgs = context
         .objectForKeyedSubscript("meshNetworkState" as NSString)?

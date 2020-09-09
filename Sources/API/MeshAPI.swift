@@ -5,7 +5,7 @@ class MeshAPI: NSObject, MeshAPIExports {
 
   class func getInstance() -> MeshAPI {
     return MeshAPI {
-      //
+      assertionFailure("MeshAPI created via getInstance() and no updateHandler provided; This is basically because MeshControllerJS did not provide a correct instance to the js runtime.")
     }
   }
 
