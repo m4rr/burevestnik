@@ -4,6 +4,8 @@ Truly offline chat via (Bluetooth) Multipeer Connectivity.
 
 ## Beta
 
+Live!
+
 TestFlight: [bit.ly/burevestnik](https://bit.ly/burevestnik)
 
 ### Architecture Overview
