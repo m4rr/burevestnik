@@ -74,7 +74,7 @@ extension FrontendAPI: UiDataProvider {
   }
 
   var numberOfPeers: Int {
-    0
+    data.count
   }
 
   //  func isConflicting(_ name: String) -> Bool {
