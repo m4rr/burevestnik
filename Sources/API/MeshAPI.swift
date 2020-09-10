@@ -1,20 +1,11 @@
 import Foundation
 import JavaScriptCore
 
-class MeshAPI: NSObject, MeshAPIExports {
+class MeshAPI: NSObject, MeshAPIProtocol & MeshAPIExports {
 
-  class func getInstance() -> MeshAPI {
-    return MeshAPI {
-      assertionFailure("MeshAPI created via getInstance() and no updateHandler provided; This is basically because MeshControllerJS did not provide a correct instance to the js runtime.")
-    }
-  }
-
-  var handleUpdate: AnyVoid
   var localNetwork: LocalNetwork!
 
-  init(handleUpdate: @escaping AnyVoid) {
-    self.handleUpdate = handleUpdate
-
+  override init() {
     super.init()
 
     self.localNetwork = BtMan(meshAPI: self) // WebSocketConn()
@@ -50,23 +41,16 @@ class MeshAPI: NSObject, MeshAPIExports {
     _userDataUpdateHandler = f
   }
 
-  func setDebugMessage(_ json: String) {
-    debugPrint(json)
-    handleUpdate()
-  }
-
   // storage
 
   private var _peerAppearedHandler: JSValue!
   func peerAppearedHandler(_ id: NetworkID) -> Void {
     _peerAppearedHandler.call(withArguments: [id])
-    handleUpdate()
   }
 
   private var _peerDisappearedHandler: JSValue!
   func peerDisappearedHandler(_ id: NetworkID) -> Void {
     _peerDisappearedHandler.call(withArguments: [id])
-    handleUpdate()
   }
 
   private var _messageHandler: JSValue!

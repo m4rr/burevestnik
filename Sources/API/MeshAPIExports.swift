@@ -1,15 +1,9 @@
 import Foundation
 import JavaScriptCore
 
-typealias NetworkMessage = String
-typealias NetworkID = String
-typealias NetworkTime = Int
-
 //github.com/m4rr/burevestnik/blob/master/jsonrpc.md
 
 @objc protocol MeshAPIExports: JSExport {
-
-  static func getInstance() -> MeshAPI
 
   // MARK: - Funcs
 
@@ -18,8 +12,6 @@ typealias NetworkTime = Int
 
   /// 4
   func sendMessage(_ peerID: NetworkID, _ data: NetworkMessage)
-
-  func setDebugMessage(_ json: String)
 
   // MARK: - Callbacks (each recieves a function that cannot be expressed with Swift)
   
@@ -36,5 +28,26 @@ typealias NetworkTime = Int
   func registerMessageHandler(_ f: JSValue)
 
   func registerUserDataUpdateHandler(_ f: JSValue)
+
+}
+
+/// Runs what's registered by `MeshAPIExports`
+
+protocol MeshAPIProtocol {
+
+//  var _peerAppearedHandler: JSValue! { get set }
+  func peerAppearedHandler(_ id: NetworkID) -> Void
+
+//  var _peerDisappearedHandler: JSValue! { get set }
+  func peerDisappearedHandler(_ id: NetworkID) -> Void
+
+//  var _messageHandler: JSValue! { get set }
+  func messageHandler(_ id: NetworkID, _ data: NetworkMessage)
+
+//  var _timeTickHandler: JSValue! { get set }
+  func timeTickHandler(_ ts: NetworkTime)
+
+//  var _userDataUpdateHandler: JSValue! { get set }
+  func userDataUpdateHandler(data: NetworkMessage)
 
 }

@@ -1,7 +1,28 @@
 import Foundation
 
+typealias NetworkMessage = String
+typealias NetworkID = String
+typealias NetworkTime = Int
+
 @available(iOS 13.0, *)
 private let relativeDateFormatter = RelativeDateTimeFormatter()
+
+struct DataMessage: Codable {
+  let Message: NetworkMessage
+}
+
+struct HandleUpdate: Codable {
+
+  var ThisPeer: TsData?,
+      AllPeers: [NetworkID: TsData]
+
+  struct TsData: Codable {
+
+    let TS: NetworkTime
+    let Data: DataMessage
+
+  }
+}
 
 struct BroadMessage: Equatable {
 
@@ -26,40 +47,14 @@ struct BroadMessage: Equatable {
     return DateFormatter.localizedString(from: messageDate, dateStyle: .medium, timeStyle: .medium)
   }
 
-  static func from(_ json: (key: AnyHashable, val: Any)) -> Self {
-
-    let valueDic = json.val as? [String: Any]
-
-    return BroadMessage(
-      ti: (valueDic?["UpdateTS"] as? NetworkTime) ?? -1,
-      msg: (valueDic?["UserState"] as? [String: String])?["Message"] ?? "-no-",
-      from: json.key as? String ?? "-no key-")
+  static func from(_ tsdatas: (key: NetworkID, val: HandleUpdate.TsData)) -> Self {
+    return BroadMessage(ti: tsdatas.val.TS,
+                        msg: tsdatas.val.Data.Message,
+                        from: tsdatas.key)
   }
 
   private func deviceNameRemovingUUID(_ name: String) -> String {
     String(name.dropLast(uuidTakeLength))
   }
 
-}
-
-protocol UiHandler: class {
-
-  var reloadHandler: AnyVoid { get set }
-  func broadcastMessage(_ text: String)
-
-}
-
-protocol UiProvider {
-
-  var dataCount: Int { get }
-  func dataAt(_ indexPath: IndexPath) -> BroadMessage
-
-  var numberOfPeers: Int { get }
-
-//  func isConflicting(_ name: String) -> Bool
-
-}
-
-protocol FrontendAPI: UiHandler & UiProvider {
-  
 }

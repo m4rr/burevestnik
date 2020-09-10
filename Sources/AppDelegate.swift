@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  private lazy var meshCon = MeshControllerJS()
+  private var meshCon: MeshControllerJS!
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
@@ -32,10 +32,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window?.tintColor = .systemRed
 
     let nc = window?.rootViewController as? UINavigationController
-    let vc = (nc?.topViewController ?? window?.rootViewController) as? ViewController
+    let vc = (nc?.topViewController ?? window?.rootViewController) as? Ui
 
-    vc?.uiHandler = meshCon
-    
+    meshCon = MeshControllerJS(frontendAPI: FrontendAPI(ui: vc))
+
     return true
   }
 

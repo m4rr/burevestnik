@@ -1,14 +1,10 @@
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, Ui {
+
+  weak var uiProvider: UiDataProvider?
 
   lazy var reach = Reachability.forInternetConnection()
-
-  weak var uiHandler: (UiHandler & UiProvider)? {
-    didSet {
-      uiHandler?.reloadHandler = reloadTableView
-    }
-  }
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet var mapViewWrapperHeight: NSLayoutConstraint!
@@ -20,14 +16,12 @@ class ViewController: UIViewController {
   @IBOutlet weak var peersButton: UIBarButtonItem!
   @IBOutlet weak var wwanButton: UIBarButtonItem!
 
-  func reloadTableView() {
+  func reloadUI() {
     tableView.reloadData()
 
-    let numberOfPeers = uiHandler?.numberOfPeers ?? 0
+    peersButton.title = "\(uiProvider?.numberOfPeers ?? 0) Online"
 
-    peersButton.title = "\(numberOfPeers) Online"
-
-    sendMessageBigButton.isHidden = (uiHandler?.dataCount ?? 0) != 0
+    sendMessageBigButton.isHidden = (uiProvider?.dataCount ?? 0) != 0
   }
 
   private var locMan: LocationMan?
@@ -72,11 +66,13 @@ class ViewController: UIViewController {
   }
 
   @IBAction func peersButtonDidTap(_ sender: UIBarButtonItem) {
-    reloadTableView()
+    reloadUI()
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
+
+    assert(uiProvider != nil)
 
     title = "🤍❤️🤍"
 
@@ -182,7 +178,7 @@ class ViewController: UIViewController {
   func makeSendMessage(text: String?) {
 
     if let text = text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
-      self.uiHandler?.broadcastMessage(text)
+      uiProvider?.broadcastMessage(text)
     }
 
   }
@@ -192,23 +188,23 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    uiHandler?.dataCount ?? 0
+    uiProvider?.dataCount ?? 0
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-    if let uiHandler = uiHandler {
 
-      let data = uiHandler.dataAt(indexPath)
 
-      cell.t1?.text = data.msg
+    let data = uiProvider!.dataAt(indexPath)
 
-//      let name = uiHandler.isConflicting(data.simpleFrom) ? data.from : data.simpleFrom
+    cell.t1?.text = data.msg
 
-      cell.t2?.text = data.simpleFrom + " / " + data.simpleDate
-    }
+    //      let name = uiHandler.isConflicting(data.simpleFrom) ? data.from : data.simpleFrom
+
+    cell.t2?.text = data.simpleFrom + " / " + data.simpleDate
+
 
     return cell
   }
