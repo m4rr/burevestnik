@@ -14,6 +14,8 @@ class ViewController: UIViewController {
   @IBOutlet var mapViewWrapperHeight: NSLayoutConstraint!
   @IBOutlet var mapWrapperView: MapWrapperView!
 
+  @IBOutlet weak var sendMessageBigButton: UIButton!
+
   @IBOutlet weak var gpsButton: UIBarButtonItem!
   @IBOutlet weak var peersButton: UIBarButtonItem!
   @IBOutlet weak var wwanButton: UIBarButtonItem!
@@ -24,6 +26,8 @@ class ViewController: UIViewController {
     let numberOfPeers = uiHandler?.numberOfPeers ?? 0
 
     peersButton.title = "\(numberOfPeers) Online"
+
+    sendMessageBigButton.isHidden = (uiHandler?.dataCount ?? 0) != 0
   }
 
   private var locMan: LocationMan?
@@ -111,22 +115,76 @@ class ViewController: UIViewController {
     reach?.startNotifier()
   }
 
-  @IBAction func composeDidTap(_ sender: Any) {
-    let alert = UIAlertController(title: "Broadcast", message: "Enter 140 chars messasge", preferredStyle: .alert)
+  private lazy var accv = PaddingTextField(
+    frame: .init(x: 0, y: 0, width: 100, height: 50),
+    onSend: { [weak self] text in
+      self?.makeSendMessage(text: text)
+      self?._canBecomeFirstResponder = false
+    },
+    onResign: { [weak self] in
+      self?._canBecomeFirstResponder = false
+    })
+    .then { tf in
+      tf.placeholder = " Message"
+      tf.returnKeyType = .send
+      tf.clearButtonMode = .whileEditing
 
-    alert.addTextField { (tf) in
-      tf.placeholder = "БЧБ"
+      if #available(iOS 13.0, *) {
+        tf.backgroundColor = .systemGray6
+      } else {
+        tf.backgroundColor = .lightGray
+      }
+  }
+
+  override var inputAccessoryView: UIView? {
+    _canBecomeFirstResponder ? accv : nil
+  }
+
+  override func resignFirstResponder() -> Bool {
+    return super.resignFirstResponder()
+  }
+
+  private var _canBecomeFirstResponder = false {
+    didSet {
+
+      if _canBecomeFirstResponder == oldValue {
+        return
+      }
+
+//      view.reloadInputViews()
+
+      if _canBecomeFirstResponder {
+        becomeFirstResponder()
+        accv.becomeFirstResponder()
+
+      } else {
+        _ = accv.resignFirstResponder()
+        _ = resignFirstResponder()
+      }
+
+//      reloadInputViews()
+
+//      view.reloadInputViews()
+
+    }
+  }
+
+  override var canBecomeFirstResponder: Bool {
+    _canBecomeFirstResponder
+  }
+
+  @IBAction func composeDidTap(_ sender: Any) {
+
+    _canBecomeFirstResponder = true
+
+  }
+
+  func makeSendMessage(text: String?) {
+
+    if let text = text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty {
+      self.uiHandler?.broadcastMessage(text)
     }
 
-    alert.addAction(UIAlertAction(title: "Send", style: .destructive, handler: { [weak alert] _ in
-      if let text = alert?.textFields?.first?.text {
-        self.uiHandler?.broadcastMessage(text)
-      }
-    }))
-
-    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-
-    present(alert, animated: true)
   }
 
 }
@@ -153,6 +211,62 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     return cell
+  }
+
+}
+
+class PaddingTextField: UITextField {
+
+  private var onSend: (String?) -> Void
+  private var onResign: AnyVoid
+  private let xPadding: CGFloat = 10, yPadding: CGFloat = 8
+
+  init(frame: CGRect, onSend: @escaping (String?) -> Void, onResign: @escaping AnyVoid) {
+
+    self.onSend = onSend
+    self.onResign = onResign
+
+    super.init(frame: frame)
+
+    self.delegate = self
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func textRect(forBounds bounds: CGRect) -> CGRect {
+    CGRect(
+      x: bounds.origin.x + xPadding,
+      y: bounds.origin.y + yPadding,
+      width: bounds.size.width - xPadding * 2,
+      height: bounds.size.height - yPadding * 2
+    )
+  }
+
+  override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    textRect(forBounds: bounds)
+  }
+
+  override func resignFirstResponder() -> Bool {
+    defer{onResign()}
+    return super.resignFirstResponder()
+  }
+
+}
+
+
+extension PaddingTextField: UITextFieldDelegate {
+
+  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    if (string == "\n") {
+      defer {
+        onSend(self.text)
+      }
+      return false
+    }
+
+    return true
   }
 
 }
