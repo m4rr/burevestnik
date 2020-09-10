@@ -59,3 +59,7 @@ protocol UiProvider {
 //  func isConflicting(_ name: String) -> Bool
 
 }
+
+protocol FrontendAPI: UiHandler & UiProvider {
+  
+}

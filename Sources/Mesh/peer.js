@@ -1,15 +1,6 @@
 log('started');
-try {
-  if (!!api) {
-    // exists, injected by Swift/JavaScriptCore
-  } else {
-    var api = new MeshAPI(); // Swift does not expose init(), so if cannot create...
-  }
-}
-catch(e){
-  var api = MeshAPI.getInstance(); // ... go getInstance like that
-}
-var myId = api.getMyID();
+
+var myId = meshAPI.getMyID();
 log('my ID:', myId);
 
 var currentTS = 0;
@@ -54,29 +45,38 @@ function newPeerToPeerSyncer(sender_func) {
     return s;
 }
 
-api.registerPeerAppearedHandler(function(id) {
+meshAPI.registerPeerAppearedHandler(function(id) {
     syncers[id] = newPeerToPeerSyncer(function(pkgStateUpdate){
         var p = {
             Type: "pkgStateUpdate",
             Content: pkgStateUpdate
         }
-        api.sendMessage(id, JSON.stringify(p));
+        meshAPI.sendMessage(id, JSON.stringify(p));
     });
     if(Object.keys(meshNetworkState).length > 0) {
         syncers[id].updateData(meshNetworkState);
     }
 });
 
-api.registerPeerDisappearedHandler(function(id) {
+meshAPI.registerPeerDisappearedHandler(function(id) {
     delete syncers[id];
 });
 
-function sendDbgData() {
-    api.setDebugMessage(JSON.stringify({
-        MyID: myId,
-        MyTS: currentTS,
-        PeersState: meshNetworkState
-    }))
+function sendFrontendUpdate() {
+    var st = {};
+    for (var id in meshNetworkState) {
+        st[id] = {
+            TS: meshNetworkState[id].UpdateTS,
+            Data: meshNetworkState[id].UserState
+        }
+    }
+    frontendAPI.handleUpdate({
+        ThisPeer: meshNetworkState[myId] ? {
+            TS: meshNetworkState[myId].UpdateTS,
+            Data: meshNetworkState[myId].UserState
+        }: null,
+        AllPeers: st
+    })
 }
 
 function handleNewIncomingState(sourceID, update) {
@@ -97,7 +97,7 @@ function handleNewIncomingState(sourceID, update) {
     }
 
     if(somethingChanged == true) {
-        sendDbgData()
+        sendFrontendUpdate()
         for(var id in syncers) {
             if(sourceID == id) {
                 continue
@@ -108,7 +108,7 @@ function handleNewIncomingState(sourceID, update) {
 }
 
 
-api.registerMessageHandler(function(id, data) {
+meshAPI.registerMessageHandler(function(id, data) {
     try {
         var inpkg = JSON.parse(data);
     }
@@ -123,7 +123,7 @@ api.registerMessageHandler(function(id, data) {
         var ack = {}
         ack.TS = update.TS;
         var p = {Type: "pkgStateUpdateReceivedAck", Content: ack};
-        api.sendMessage(id, JSON.stringify(p));
+        meshAPI.sendMessage(id, JSON.stringify(p));
         break;
     case "pkgStateUpdateReceivedAck":
         if(syncers[id] != undefined){
@@ -140,14 +140,13 @@ function handleUserData(userDataObject) {
         UserState: userDataObject,
         UpdateTS:  currentTS
     };
-    sendDbgData();
+    sendFrontendUpdate();
     for(var id in syncers) {
         syncers[id].updateData(meshNetworkState)
     }
 }
 
-var nextTestSendTime = 0;
-api.registerTimeTickHandler(function(ts) {
+meshAPI.registerTimeTickHandler(function(ts) {
     currentTS = ts;
 
     for(var id in syncers) {
@@ -155,4 +154,4 @@ api.registerTimeTickHandler(function(ts) {
     }
 });
 
-api.registerUserDataUpdateHandler(handleUserData); // This will be called from frontend
+frontendAPI.registerUserDataUpdateHandler(handleUserData); // This will be called from frontend

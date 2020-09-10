@@ -25,13 +25,11 @@ public class MeshControllerJS: UiHandler {
       // Swift cannot export `String...` or va_list to the JS
       debugPrint(s1, s2)
     }
-    context.setObject(
-      unsafeBitCast(logger, to: AnyObject.self),
-      forKeyedSubscript: "log" as NSString)
+    context.setObject(unsafeBitCast(logger, to: AnyObject.self),
+                      forKeyedSubscript: "log" as NSString)
 
-    context.setObject(
-      unsafeBitCast(meshAPI, to: AnyObject.self),
-      forKeyedSubscript: "api" as NSString)
+    context.setObject(unsafeBitCast(meshAPI, to: AnyObject.self),
+                      forKeyedSubscript: "meshAPI" as NSString)
 
     // context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
 
