@@ -25,6 +25,7 @@
 		03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BluetoothMan.swift */; };
 		03BE7B6D24F9C3FD00CBE53C /* peer.js in Resources */ = {isa = PBXBuildFile; fileRef = 03BE7B6C24F9C3FD00CBE53C /* peer.js */; };
 		03D7236924E6D05F003B3211 /* UiHandler+UiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D7236824E6D05F003B3211 /* UiHandler+UiProvider.swift */; };
+		03E14D6E250A447C00EE8A41 /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03E14D6D250A447C00EE8A41 /* Then.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
 		03C8656C24E44D4000FAC1B5 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		03D7236824E6D05F003B3211 /* UiHandler+UiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UiHandler+UiProvider.swift"; sourceTree = "<group>"; };
+		03E14D6D250A447C00EE8A41 /* Then.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Then.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,7 @@
 			children = (
 				0383B09A24ED5F830098E91F /* Reachability.h */,
 				0383B09B24ED5F830098E91F /* Reachability.m */,
+				03E14D6D250A447C00EE8A41 /* Then.swift */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				036E936824E3E00D001DA125 /* ViewController.swift in Sources */,
 				034A5C3C25093C5E00451B92 /* LocalNetwork.swift in Sources */,
 				032BCFE024ED8D1400543B66 /* LocationMan.swift in Sources */,
+				03E14D6E250A447C00EE8A41 /* Then.swift in Sources */,
 				0367608924E719B900556EFA /* Extensions.swift in Sources */,
 				036E936424E3E00D001DA125 /* AppDelegate.swift in Sources */,
 				03527B2224E6B05B00E9C6DB /* MeshAPI.swift in Sources */,
