@@ -27,8 +27,6 @@ import JavaScriptCore
   /// 5
   func registerMessageHandler(_ f: JSValue)
 
-  func registerUserDataUpdateHandler(_ f: JSValue)
-
 }
 
 /// Runs what's registered by `MeshAPIExports`
@@ -46,8 +44,5 @@ protocol MeshAPIProtocol {
 
 //  var _timeTickHandler: JSValue! { get set }
   func timeTickHandler(_ ts: NetworkTime)
-
-//  var _userDataUpdateHandler: JSValue! { get set }
-  func userDataUpdateHandler(data: NetworkMessage)
 
 }

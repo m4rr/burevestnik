@@ -37,10 +37,6 @@ class MeshAPI: NSObject, MeshAPIProtocol & MeshAPIExports {
     _timeTickHandler = f
   }
 
-  func registerUserDataUpdateHandler(_ f: JSValue) {
-    _userDataUpdateHandler = f
-  }
-
   // storage
 
   private var _peerAppearedHandler: JSValue!
@@ -61,11 +57,6 @@ class MeshAPI: NSObject, MeshAPIProtocol & MeshAPIExports {
   private var _timeTickHandler: JSValue!
   func timeTickHandler(_ ts: NetworkTime) {
     _timeTickHandler.call(withArguments: [ts])
-  }
-
-  private var _userDataUpdateHandler: JSValue!
-  func userDataUpdateHandler(data: NetworkMessage) {
-    _userDataUpdateHandler.call(withArguments: [["Message": data]])
   }
 
 }
