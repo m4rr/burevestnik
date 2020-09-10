@@ -62,7 +62,7 @@ class FrontendAPI: NSObject, FrontendAPIProtocol, FrontendAPIExports {
 extension FrontendAPI: UiDataProvider {
 
   func broadcastMessage(_ text: String) {
-    userDataUpdateHandler(["Message": text])
+    userDataUpdateHandler(["Message": text.trimmingCharacters(in: .whitespacesAndNewlines)])
   }
 
   var dataCount: Int {
