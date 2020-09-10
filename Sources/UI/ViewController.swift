@@ -14,7 +14,7 @@ class ViewController: UIViewController, Ui {
 
   @IBOutlet weak var gpsButton: UIBarButtonItem!
   @IBOutlet weak var peersButton: UIBarButtonItem!
-  @IBOutlet weak var wwanButton: UIBarButtonItem!
+//  @IBOutlet weak var wwanButton: UIBarButtonItem!
 
   func reloadUI() {
     tableView.reloadData()
