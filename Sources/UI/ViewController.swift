@@ -93,7 +93,6 @@ class ViewController: UIViewController, Ui {
   }
 
   private func setupReachability() {
-
 //    wwanButton.title = reach?.currentReachabilityString()
 //
 //    reach?.reachabilityBlock = { r, _ in
@@ -105,8 +104,9 @@ class ViewController: UIViewController, Ui {
 //    reach?.startNotifier()
   }
 
-  private lazy var accv = PaddingTextField(
+  private lazy var sendMessageTextView = GrowingTextView(
     frame: .init(x: 0, y: 0, width: 100, height: 50),
+    textContainer: nil,
     onSend: { [weak self] text in
       self?.makeSendMessage(text: text)
       self?._canBecomeFirstResponder = false
@@ -114,20 +114,20 @@ class ViewController: UIViewController, Ui {
     onResign: { [weak self] in
       self?._canBecomeFirstResponder = false
     })
-    .then { tf in
-      tf.placeholder = " Message"
-      tf.returnKeyType = .send
-      tf.clearButtonMode = .whileEditing
-
+    .then { (textView) in
       if #available(iOS 13.0, *) {
-        tf.backgroundColor = .systemGray6
+        textView.backgroundColor = .systemGray6
       } else {
-        tf.backgroundColor = .lightGray
+        textView.backgroundColor = .lightGray
       }
-  }
+      textView.isScrollEnabled = false   // causes expanding height
+      textView.font = .preferredFont(forTextStyle: .body)
+      textView.translatesAutoresizingMaskIntoConstraints = false
+      textView.returnKeyType = .send
+    }
 
   override var inputAccessoryView: UIView? {
-    _canBecomeFirstResponder ? accv : nil
+    _canBecomeFirstResponder ? sendMessageTextView : nil
   }
 
   override func resignFirstResponder() -> Bool {
@@ -136,26 +136,18 @@ class ViewController: UIViewController, Ui {
 
   private var _canBecomeFirstResponder = false {
     didSet {
-
       if _canBecomeFirstResponder == oldValue {
         return
       }
 
-//      view.reloadInputViews()
-
       if _canBecomeFirstResponder {
         becomeFirstResponder()
-        accv.becomeFirstResponder()
+        sendMessageTextView.becomeFirstResponder()
 
       } else {
-        _ = accv.resignFirstResponder()
+        _ = sendMessageTextView.resignFirstResponder()
         _ = resignFirstResponder()
       }
-
-//      reloadInputViews()
-
-//      view.reloadInputViews()
-
     }
   }
 
@@ -189,8 +181,6 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! Cell
 
-
-
     let data = uiProvider!.dataAt(indexPath)
 
     cell.t1?.text = data.msg
@@ -199,64 +189,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
 
     cell.t2?.text = data.simpleFrom + " / " + data.simpleDate
 
-
     return cell
-  }
-
-}
-
-class PaddingTextField: UITextField {
-
-  private var onSend: (String?) -> Void
-  private var onResign: AnyVoid
-  private let xPadding: CGFloat = 10, yPadding: CGFloat = 8
-
-  init(frame: CGRect, onSend: @escaping (String?) -> Void, onResign: @escaping AnyVoid) {
-
-    self.onSend = onSend
-    self.onResign = onResign
-
-    super.init(frame: frame)
-
-    self.delegate = self
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  override func textRect(forBounds bounds: CGRect) -> CGRect {
-    CGRect(
-      x: bounds.origin.x + xPadding,
-      y: bounds.origin.y + yPadding,
-      width: bounds.size.width - xPadding * 2,
-      height: bounds.size.height - yPadding * 2
-    )
-  }
-
-  override func editingRect(forBounds bounds: CGRect) -> CGRect {
-    textRect(forBounds: bounds)
-  }
-
-  override func resignFirstResponder() -> Bool {
-    defer{onResign()}
-    return super.resignFirstResponder()
-  }
-
-}
-
-
-extension PaddingTextField: UITextFieldDelegate {
-
-  func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-    if (string == "\n") {
-      defer {
-        onSend(self.text)
-      }
-      return false
-    }
-
-    return true
   }
 
 }

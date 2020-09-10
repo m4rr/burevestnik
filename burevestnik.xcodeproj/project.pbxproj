@@ -25,6 +25,7 @@
 		039EF61B250A72CC00D05633 /* BroadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039EF61A250A72CC00D05633 /* BroadMessage.swift */; };
 		03AE438024E44127000D82B7 /* BluetoothMan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03AE437F24E44127000D82B7 /* BluetoothMan.swift */; };
 		03BE7B6D24F9C3FD00CBE53C /* peer.js in Resources */ = {isa = PBXBuildFile; fileRef = 03BE7B6C24F9C3FD00CBE53C /* peer.js */; };
+		03BFF269250AE462007B950D /* GrowingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BFF268250AE462007B950D /* GrowingTextView.swift */; };
 		03C60D22250A7E5F004F22F0 /* UiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C60D21250A7E5F004F22F0 /* UiProtocol.swift */; };
 		03C60D24250A854C004F22F0 /* FrontendAPIExports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C60D23250A854C004F22F0 /* FrontendAPIExports.swift */; };
 		03D7236924E6D05F003B3211 /* FrontendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D7236824E6D05F003B3211 /* FrontendAPI.swift */; };
@@ -56,6 +57,7 @@
 		039EF61A250A72CC00D05633 /* BroadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BroadMessage.swift; sourceTree = "<group>"; };
 		03AE437F24E44127000D82B7 /* BluetoothMan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothMan.swift; sourceTree = "<group>"; };
 		03BE7B6C24F9C3FD00CBE53C /* peer.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = peer.js; sourceTree = "<group>"; };
+		03BFF268250AE462007B950D /* GrowingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingTextView.swift; sourceTree = "<group>"; };
 		03C60D21250A7E5F004F22F0 /* UiProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiProtocol.swift; sourceTree = "<group>"; };
 		03C60D23250A854C004F22F0 /* FrontendAPIExports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrontendAPIExports.swift; sourceTree = "<group>"; };
 		03C8656A24E44D4000FAC1B5 /* burevestnik.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = burevestnik.entitlements; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				036E936724E3E00D001DA125 /* ViewController.swift */,
+				03BFF268250AE462007B950D /* GrowingTextView.swift */,
 				032BCFE224ED923A00543B66 /* Views.swift */,
 				03C60D21250A7E5F004F22F0 /* UiProtocol.swift */,
 			);
@@ -288,6 +291,7 @@
 				03C60D22250A7E5F004F22F0 /* UiProtocol.swift in Sources */,
 				032BCFE324ED923A00543B66 /* Views.swift in Sources */,
 				0383B09C24ED5F830098E91F /* Reachability.m in Sources */,
+				03BFF269250AE462007B950D /* GrowingTextView.swift in Sources */,
 				037A8FCE25080056001D8A73 /* MeshAPIExports.swift in Sources */,
 				03527B2424E6B06900E9C6DB /* WebSocketMan.swift in Sources */,
 			);
