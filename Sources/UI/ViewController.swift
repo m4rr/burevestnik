@@ -4,7 +4,7 @@ class ViewController: UIViewController, Ui {
 
   weak var uiProvider: UiDataProvider?
 
-  lazy var reach = Reachability.forInternetConnection()
+//  lazy var reach = Reachability.forInternetConnection()
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet var mapViewWrapperHeight: NSLayoutConstraint!
@@ -94,21 +94,15 @@ class ViewController: UIViewController, Ui {
 
   private func setupReachability() {
 
-    wwanButton.title = reach?.currentReachabilityString()
-
-    reach?.reachableBlock = { reach in
-      DispatchQueue.main.async { [weak self] in
-        self?.wwanButton.title = reach?.currentReachabilityString()
-      }
-    }
-
-    reach?.unreachableBlock = { _ in
-      DispatchQueue.main.async { [weak self] in
-        self?.wwanButton.title = "No Internet"
-      }
-    }
-
-    reach?.startNotifier()
+//    wwanButton.title = reach?.currentReachabilityString()
+//
+//    reach?.reachabilityBlock = { r, _ in
+//      DispatchQueue.main.async { [weak self] in
+//        self?.wwanButton.title = r?.currentReachabilityString()
+//      }
+//    }
+//
+//    reach?.startNotifier()
   }
 
   private lazy var accv = PaddingTextField(
