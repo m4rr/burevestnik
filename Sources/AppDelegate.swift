@@ -20,13 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-    let def = UserDefaults.standard
+    let defaults = UserDefaults.standard
 
-    if nil == def.string(forKey: uuidKey) {
+    if nil == defaults.string(forKey: uuidKey) {
       let uuid = UUID().uuidString
       let uuidTake = "-" + String(uuid.dropFirst(uuid.count + 1 - uuidTakeLength))
 
-      def.setValue(uuidTake, forKey: uuidKey)
+      defaults.setValue(uuidTake, forKey: uuidKey)
     }
 
     window?.tintColor = .systemRed

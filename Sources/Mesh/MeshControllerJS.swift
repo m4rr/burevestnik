@@ -12,11 +12,12 @@ public class MeshControllerJS: UiHandler {
 
   deinit {
     debugPrint("MeshControllerJS deinit")
+    assertionFailure()
   }
 
   private func runJS() {
 
-    guard let script = jsScript  else {
+    guard let url = peerJSURL, let script = contentsOf(url: url) else {
       return
     }
 
@@ -35,23 +36,24 @@ public class MeshControllerJS: UiHandler {
     // context.setObject(MeshAPI.self, forKeyedSubscript: "MeshAPI" as NSString)
 
     context.exceptionHandler = { ctx, value in
-      debugPrint(ctx ?? "js exception no ctx",
-                 value?.toString() ?? "js exception no value")
+      assert(ctx != nil && ctx == self.context)
+
+      debugPrint(value?.toString() ?? "js exception no value")
     }
 
-    if let result = context.evaluateScript(script) {
+    if let result = context.evaluateScript(script, withSourceURL: url) {
       debugPrint("evaluateScript result - ", result)
     } else {
       assertionFailure()
     }
   }
 
-  private var jsURL: URL? {
+  private var peerJSURL: URL? {
     Bundle.main.url(forResource: "peer", withExtension: "js")
   }
 
-  private var jsScript: String? {
-    if let url = jsURL, let data = try? Data(contentsOf: url).string {
+  private func contentsOf(url: URL) -> String? {
+    if let data = try? Data(contentsOf: url).string {
       return data
     }
 

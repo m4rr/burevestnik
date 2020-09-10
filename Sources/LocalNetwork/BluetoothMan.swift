@@ -6,10 +6,9 @@ private let kMCSessionService = "burevestnik"
 
 class BtMan: NSObject {
 
-  private var timer: Timer?
-
-  /// Starts multipeer session when assigned.
   weak var meshAPI: MeshAPI!
+  
+  private var timer: Timer?
 
   init(meshAPI: MeshAPI) {
     self.meshAPI = meshAPI
@@ -28,7 +27,7 @@ class BtMan: NSObject {
   }
 
   deinit {
-    
+    assertionFailure()
   }
 
   private let localPeerID: MCPeerID = MCPeerID(displayName: kThisDeviceName)
@@ -109,17 +108,22 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, peerID, state.rawValue)
 
     switch state {
+    case .notConnected:
+//      meshAPI.peerDisappearedHandler(peerID.displayName)
+//      peers[peerID.displayName] = nil
+      // see `browser(_:, lostPeer:)`
+    ()
+
+    case .connecting:
+      ()
+
     case .connected:
       peers[peerID.displayName] = archivePeerID(peerID)
       meshAPI.peerAppearedHandler(peerID.displayName)
 
-    case .notConnected:
-//      meshAPI.peerDisappearedHandler(peerID.displayName)
-//      peers[peerID.displayName] = nil
-    ()
-
-    default:
+    @unknown default:
       ()
+
     }
   }
 
@@ -145,11 +149,6 @@ extension BtMan: MCSessionDelegate {
     debugPrint(#function, resourceName, peerID, localURL ?? "---")
   }
 
-  func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
-    debugPrint(#function, peerID, certificate ?? "<no certificate>")
-
-    certificateHandler(true)
-  }
 }
 
 extension BtMan: MCNearbyServiceBrowserDelegate {
@@ -175,18 +174,17 @@ extension BtMan: MCNearbyServiceBrowserDelegate {
 extension BtMan: MCNearbyServiceAdvertiserDelegate {
 
   func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-    debugPrint(context?.debugDescription ?? "--no invite data")
+    debugPrint(#function, context?.debugDescription ?? "--no invite data")
 
     invitationHandler(true, session)
-
-//    stopAdvertising()
   }
+
 }
 
 extension BtMan: LocalNetwork {
 
   var numberOfPeers: Int {
-    peers.count + 1
+    peers.count + 1 // 1 is me online
   }
   
   func myID() -> NetworkID {
